@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ABCReceiptDataset" targetNamespace="http://tempuri.org/ABCReceiptDataset.xsd" xmlns:mstns="http://tempuri.org/ABCReceiptDataset.xsd" xmlns="http://tempuri.org/ABCReceiptDataset.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="ABCReceiptDataset" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="ABCReceiptDataset" msprop:Generator_UserDSName="ABCReceiptDataset">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="ReceiptTable" msprop:Generator_TableClassName="ReceiptTableDataTable" msprop:Generator_TableVarName="tableReceiptTable" msprop:Generator_TablePropName="ReceiptTable" msprop:Generator_RowDeletingName="ReceiptTableRowDeleting" msprop:Generator_RowChangingName="ReceiptTableRowChanging" msprop:Generator_RowEvHandlerName="ReceiptTableRowChangeEventHandler" msprop:Generator_RowDeletedName="ReceiptTableRowDeleted" msprop:Generator_UserTableName="ReceiptTable" msprop:Generator_RowChangedName="ReceiptTableRowChanged" msprop:Generator_RowEvArgName="ReceiptTableRowChangeEvent" msprop:Generator_RowClassName="ReceiptTableRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ReceiptNumber" msprop:Generator_ColumnVarNameInTable="columnReceiptNumber" msprop:Generator_ColumnPropNameInRow="ReceiptNumber" msprop:Generator_ColumnPropNameInTable="ReceiptNumberColumn" msprop:Generator_UserColumnName="ReceiptNumber" type="xs:string" minOccurs="0" />
+              <xs:element name="Address" msprop:Generator_ColumnVarNameInTable="columnAddress" msprop:Generator_ColumnPropNameInRow="Address" msprop:Generator_ColumnPropNameInTable="AddressColumn" msprop:Generator_UserColumnName="Address" type="xs:string" minOccurs="0" />
+              <xs:element name="Country" msprop:Generator_ColumnVarNameInTable="columnCountry" msprop:Generator_ColumnPropNameInRow="Country" msprop:Generator_ColumnPropNameInTable="CountryColumn" msprop:Generator_UserColumnName="Country" type="xs:string" minOccurs="0" />
+              <xs:element name="State" msprop:Generator_ColumnVarNameInTable="columnState" msprop:Generator_ColumnPropNameInRow="State" msprop:Generator_ColumnPropNameInTable="StateColumn" msprop:Generator_UserColumnName="State" type="xs:string" minOccurs="0" />
+              <xs:element name="City" msprop:Generator_ColumnVarNameInTable="columnCity" msprop:Generator_ColumnPropNameInRow="City" msprop:Generator_ColumnPropNameInTable="CityColumn" msprop:Generator_UserColumnName="City" type="xs:string" minOccurs="0" />
+              <xs:element name="ReceiptDate" msprop:Generator_ColumnVarNameInTable="columnReceiptDate" msprop:Generator_ColumnPropNameInRow="ReceiptDate" msprop:Generator_ColumnPropNameInTable="ReceiptDateColumn" msprop:Generator_UserColumnName="ReceiptDate" type="xs:string" minOccurs="0" />
+              <xs:element name="AnnadhanamDate" msprop:Generator_ColumnVarNameInTable="columnAnnadhanamDate" msprop:Generator_ColumnPropNameInRow="AnnadhanamDate" msprop:Generator_ColumnPropNameInTable="AnnadhanamDateColumn" msprop:Generator_UserColumnName="AnnadhanamDate" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
