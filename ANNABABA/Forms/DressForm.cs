@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlServerCe;
 using System.Drawing;
+using System.Globalization;
 using System.Windows.Forms;
 
 namespace ANNABABA.Forms
 {
-    public partial class BookDressForm : Form
+    public partial class DressForm : Form
     {
-        Timer tmr = null;
-        public SqlCeConnection cn = new SqlCeConnection(@"Data Source=D:\AnnaBaba\ABCAnadhanamDetails.sdf");
-        public BookDressForm()
+        Timer _timer;
+        private SqlCeConnection _con = new SqlCeConnection(@"Data Source=D:\AnnaBaba\ABCAnadhanamDetails.sdf");
+        public DressForm()
         {
             InitializeComponent();
             ddlYear_DataBing();
@@ -24,19 +25,18 @@ namespace ANNABABA.Forms
 
         private void StartTimer()
         {
-            tmr = new Timer();
-            tmr.Interval = 1000;
-            tmr.Tick += new EventHandler(tmr_Tick);
-            tmr.Enabled = true;
+            _timer = new Timer {Interval = 1000};
+            _timer.Tick += tmr_Tick;
+            _timer.Enabled = true;
         }
 
         void tmr_Tick(object sender, EventArgs e)
         {
-            lblDateValue.Text = DateTime.Now.ToString();
+            lblDateValue.Text = DateTime.Now.ToString(CultureInfo.InvariantCulture);
         }
         #endregion   
 
-        public static Dictionary<int, string> MonthList = new Dictionary<int, string>()
+        public static Dictionary<int, string> monthList = new Dictionary<int, string>()
         {
             { 0, "<-Select->"},
             { 1, "January"},
@@ -55,21 +55,21 @@ namespace ANNABABA.Forms
 
         public void ddlMonth_DataBing()
         {
-            ddlMonth.DataSource = new BindingSource(MonthList, null);
+            ddlMonth.DataSource = new BindingSource(monthList, null);
             ddlMonth.DisplayMember = "Value";
             ddlMonth.ValueMember = "Key";
         }
 
         private void ddlYear_DataBing()
         {
-            Dictionary<string, string> YearList = new Dictionary<string, string>();
-            YearList.Add("<-Select->", "<-Select->");
+            Dictionary<string, string> yearList = new Dictionary<string, string>();
+            yearList.Add("<-Select->", "<-Select->");
             int currentYear = Convert.ToInt32(DateTime.Now.Year.ToString());
             for (int i = currentYear; i <= currentYear + 5; i++)
             {
-                YearList.Add(i.ToString(), i.ToString());
+                yearList.Add(i.ToString(), i.ToString());
             }
-            ddlYear.DataSource = new BindingSource(YearList, null);
+            ddlYear.DataSource = new BindingSource(yearList, null);
             ddlYear.DisplayMember = "Value";
             ddlYear.ValueMember = "Key";
         }
@@ -87,21 +87,21 @@ namespace ANNABABA.Forms
         {
             if (e.ColumnIndex == 6)
             {
-                DataGridViewRow row = this.dgMonthdetails.Rows[e.RowIndex];
+                DataGridViewRow row = dgMonthdetails.Rows[e.RowIndex];
                 if (row != null)
                 {                  
-                    string DevoteeName = row.Cells["DevoteeName"].Value.ToString();
-                    string Address = row.Cells["Address"].Value.ToString();
-                    string ContactNumber = row.Cells["ContactNumber"].Value.ToString();
-                    string Date = row.Cells["Date"].Value.ToString();
+                    string devoteeName = row.Cells["DevoteeName"].Value.ToString();
+                    string address = row.Cells["Address"].Value.ToString();
+                    string contactNumber = row.Cells["ContactNumber"].Value.ToString();
+                    string date = row.Cells["Date"].Value.ToString();
 
-                    InsertDressDetails(Date,DevoteeName, Address, ContactNumber);
-                    MessageBox.Show("You Have Selected " + ((e.RowIndex + 1).ToString() + DevoteeName + Address) + " Row Button");
+                    InsertDressDetails(date,devoteeName, address, contactNumber);
+                    MessageBox.Show(@"You Have Selected " + ((e.RowIndex + 1).ToString() + devoteeName + address) + @" Row Button");
                 }
             }
             if (e.ColumnIndex == 7)
             {
-                DataGridViewRow row = this.dgMonthdetails.Rows[e.RowIndex];
+                DataGridViewRow row = dgMonthdetails.Rows[e.RowIndex];
                 if (row != null)
                 {
                     row.Cells["DevoteeName"].Value = "";
@@ -116,10 +116,10 @@ namespace ANNABABA.Forms
         {
             try
             {
-                cn = new SqlCeConnection(@"Data Source=D:\AnnaBaba\ABCAnadhanamDetails.sdf");
-                cn.Open();
+                _con = new SqlCeConnection(@"Data Source=D:\AnnaBaba\ABCAnadhanamDetails.sdf");
+                _con.Open();
             }
-            catch (SqlCeInvalidDatabaseFormatException ex)
+            catch (SqlCeInvalidDatabaseFormatException)
             {
                 string connStringCI = @"Data Source=D:\AnnaBaba\ABCAnadhanamDetails.sdf; LCID= 1033";
                 string connStringCS = @"Data Source=D:\AnnaBaba\ABCAnadhanamDetails.sdf; LCID= 1033; Case Sensitive=true";
@@ -127,9 +127,9 @@ namespace ANNABABA.Forms
                 SqlCeEngine engine = new SqlCeEngine(connStringCI);
                 engine.Upgrade(connStringCS);
 
-                cn = null;
-                cn = new SqlCeConnection(connStringCI);
-                cn.Open();
+                _con = null;
+                _con = new SqlCeConnection(connStringCI);
+                _con.Open();
             }
             catch (SqlCeException ex)
             {
@@ -140,7 +140,6 @@ namespace ANNABABA.Forms
             {
                 MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally { }
         }
         #endregion
         #region DRESS DETAILS
@@ -151,20 +150,20 @@ namespace ANNABABA.Forms
                 if (ddlYear.SelectedValue != null && !string.IsNullOrWhiteSpace(ddlYear.SelectedValue.ToString()) && !ddlYear.SelectedValue.ToString().Contains("Select") &&
                       ddlMonth.SelectedValue != null && !string.IsNullOrWhiteSpace(ddlMonth.SelectedValue.ToString()) && !ddlMonth.SelectedValue.ToString().Contains("Select"))
                 {
-                    DataTable dataTable = new DataTable();
-                    DataTable GridDetails = new DataTable();                   
                     OpenSqlCeConnection();
                     string strQuery = "SELECT * FROM  BABADRESSDETAILS  WHERE Month='" + ddlMonth.SelectedValue + "' OR Year='" + ddlYear.SelectedValue + "'";
-                    SqlCeCommand cm = new SqlCeCommand(strQuery, cn);
-                    cm.CommandText = strQuery;
-                    cm.CommandType = CommandType.Text;
-                    cm.Connection = cn;
+                    SqlCeCommand cm = new SqlCeCommand(strQuery, _con)
+                    {
+                        CommandText = strQuery,
+                        CommandType = CommandType.Text,
+                        Connection = _con
+                    };
                     var dataReader = cm.ExecuteReader();
+                    DataTable dataTable = new DataTable();
                     dataTable.Load(dataReader);
                     if (dataTable != null && dataTable.Rows.Count > 0)
                     {
-                        GridDetails = polulateGridDetails(dataTable);
-                        //var rows = dataTable.Rows.Contains(startDate);
+                        PolulateGridDetails();
                     }
                 }
             }
@@ -174,16 +173,15 @@ namespace ANNABABA.Forms
             }
             finally
             {
-                cn.Close();
+                _con.Close();
             }
         }
 
-        private DataTable polulateGridDetails(DataTable Table)
+        private void PolulateGridDetails()
         {
-            int RowNo = 0;
+            int rowNo = 0;
 
-            DataTable dataTable = new DataTable();
-            DataRow dRow;
+            var dataTable = new DataTable();
             dataTable.Columns.Add("SlNo", typeof(string));
             dataTable.Columns.Add("Date", typeof(string));
             dataTable.Columns.Add("Day", typeof(string));
@@ -193,32 +191,32 @@ namespace ANNABABA.Forms
 
             for (var day = startDate.Date; day <= endDate; day = day.AddDays(1))
             {
-                RowNo = RowNo + 1;
-                dRow = dataTable.NewRow();
-                dRow["SlNo"] = RowNo.ToString();
+                rowNo = rowNo + 1;
+                var dRow = dataTable.NewRow();
+                dRow["SlNo"] = rowNo.ToString();
                 dRow["Date"] = day.Date.ToString("dd/MMM/yyyy");
                 dRow["Day"] = day.DayOfWeek.ToString();
                 dataTable.Rows.Add(dRow);
             }
             dgMonthdetails.DataSource = dataTable;
-            DataGridTextBoxColumn DevoteeName = new DataGridTextBoxColumn();
+            DataGridTextBoxColumn devoteeName = new DataGridTextBoxColumn();
             dgMonthdetails.Columns.Add("DevoteeName", "Devotee Name");
-            DevoteeName.Width = 400;
-            DevoteeName.TextBox.Name = "DevoteeName";
+            devoteeName.Width = 400;
+            devoteeName.TextBox.Name = "DevoteeName";
 
-            DataGridTextBoxColumn Address = new DataGridTextBoxColumn();
+            DataGridTextBoxColumn address = new DataGridTextBoxColumn();
             dgMonthdetails.Columns.Add("Address", "Address");
-            Address.Width = 600;
-            Address.TextBox.Name = "Address";
+            address.Width = 600;
+            address.TextBox.Name = "Address";
 
-            DataGridTextBoxColumn ContactNumber = new DataGridTextBoxColumn();
+            DataGridTextBoxColumn contactNumber = new DataGridTextBoxColumn();
             dgMonthdetails.Columns.Add("ContactNumber", "Contact Number");
-            ContactNumber.Width = 400;
-            ContactNumber.TextBox.Name = "ContactNumber";
+            contactNumber.Width = 400;
+            contactNumber.TextBox.Name = "ContactNumber";
 
             DataGridViewButtonColumn btnSave = new DataGridViewButtonColumn();
             dgMonthdetails.Columns.Add(btnSave);
-            btnSave.HeaderText = "Save";
+            btnSave.HeaderText = @"Save";
             btnSave.Text = "Save";
             btnSave.Name = "btnSave";
             btnSave.UseColumnTextForButtonValue = true;
@@ -226,7 +224,7 @@ namespace ANNABABA.Forms
 
             DataGridViewButtonColumn btnClear = new DataGridViewButtonColumn();
             dgMonthdetails.Columns.Add(btnClear);
-            btnClear.HeaderText = "Clear";
+            btnClear.HeaderText = @"Clear";
             btnClear.Text = "Clear";
             btnClear.Name = "btnClear";
             btnClear.UseColumnTextForButtonValue = true;
@@ -242,40 +240,39 @@ namespace ANNABABA.Forms
             dgMonthdetails.Columns["DevoteeName"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dgMonthdetails.Columns["Address"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dgMonthdetails.Refresh();
-            return dataTable;
         }
 
-        private void InsertDressDetails(string Date, string DevoteeName, string Address, string ContactNumber)
+        private void InsertDressDetails(string date, string devoteeName, string address, string contactNumber)
         {
-            DateTime BookingDate = DateTime.Parse(Date);
-            string  Month = BookingDate.Month.ToString(), Year = BookingDate.Year.ToString();
+            DateTime bookingDate = DateTime.Parse(date);
+            string  month = bookingDate.Month.ToString(), year = bookingDate.Year.ToString();
             string strInsertQuery = "INSERT INTO BABADRESSDETAILS(BOOKINGDATE,DEVOTEENAME,ADDRESS,CONTACTNUMBER,MONTH,YEAR)VALUES(@BOOKINGDATE,@DEVOTEENAME,@ADDRESS,@CONTACTNUMBER,@MONTH,@YEAR)";
 
            
-            if (string.IsNullOrWhiteSpace(DevoteeName))
+            if (string.IsNullOrWhiteSpace(devoteeName))
             {
                 MessageBox.Show(@"Type Devotee Name", @"Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
-            else if (string.IsNullOrWhiteSpace(Address))
+            else if (string.IsNullOrWhiteSpace(address))
             {
                 MessageBox.Show(@"Type Devotee Address", @"Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
-            else if (string.IsNullOrWhiteSpace(ContactNumber))
+            else if (string.IsNullOrWhiteSpace(contactNumber))
             {
                 MessageBox.Show(@"Type ContactNumber", @"Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
             OpenSqlCeConnection();
 
-            SqlCeCommand cm = new SqlCeCommand(strInsertQuery, cn);
-            cm.Parameters.AddWithValue("@BOOKINGDATE", BookingDate);
-            cm.Parameters.AddWithValue("@DEVOTEENAME", DevoteeName);
-            cm.Parameters.AddWithValue("@ADDRESS", Address);
-            cm.Parameters.AddWithValue("@CONTACTNUMBER", ContactNumber);
-            cm.Parameters.AddWithValue("@MONTH", Month);
-            cm.Parameters.AddWithValue("@YEAR", Year);            
+            SqlCeCommand cm = new SqlCeCommand(strInsertQuery, _con);
+            cm.Parameters.AddWithValue("@BOOKINGDATE", bookingDate);
+            cm.Parameters.AddWithValue("@DEVOTEENAME", devoteeName);
+            cm.Parameters.AddWithValue("@ADDRESS", address);
+            cm.Parameters.AddWithValue("@CONTACTNUMBER", contactNumber);
+            cm.Parameters.AddWithValue("@MONTH", month);
+            cm.Parameters.AddWithValue("@YEAR", year);            
             try
             {
                 int intAffectedRow = cm.ExecuteNonQuery();
@@ -287,7 +284,7 @@ namespace ANNABABA.Forms
                 {
                     MessageBox.Show(@"Booked Failed", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                cn.Close();
+                _con.Close();
             }
             catch (Exception ex)
             {

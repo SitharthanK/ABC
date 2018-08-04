@@ -1,6 +1,6 @@
 ﻿namespace ANNABABA.Forms
 {
-    partial class ReceiptReport
+    partial class ViewReceiptForm
     {
         /// <summary>
         /// Required designer variable.
@@ -59,7 +59,7 @@
             this.ReceiptReportViewer.Size = new System.Drawing.Size(691, 516);
             this.ReceiptReportViewer.TabIndex = 0;
             // 
-            // ReceiptReport
+            // ViewReceiptForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -67,9 +67,9 @@
             this.ClientSize = new System.Drawing.Size(691, 516);
             this.Controls.Add(this.ReceiptReportViewer);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Name = "ReceiptReport";
+            this.Name = "ViewReceiptForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "ReceiptReport";
+            this.Text = "AnnaBabaCharities - [View Receipt Form]";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ReceiptReport_FormClosing);
             this.Load += new System.EventHandler(this.ReceiptReport_Load);
             ((System.ComponentModel.ISupportInitialize)(this.ReceiptTableBindingSource)).EndInit();

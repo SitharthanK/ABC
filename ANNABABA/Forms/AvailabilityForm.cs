@@ -6,12 +6,12 @@ using System.Windows.Forms;
 
 namespace ANNABABA.Forms
 {
-    public partial class Availability : Form
+    public partial class AvailabilityForm : Form
     {
 
         private SqlCeConnection _cn = new SqlCeConnection(@"Data Source=D:\AnnaBaba\ABCAnadhanamDetails.sdf");
 
-        public Availability(DateTime dtAnnadhanamDate)
+        public AvailabilityForm(DateTime dtAnnadhanamDate)
         {
             MaximizeBox = false;
             InitializeComponent();

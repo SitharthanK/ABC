@@ -490,7 +490,7 @@ namespace ANNABABA.Forms
                             {
                                 MessageBox.Show(@"Anadhanam Updated Sucessfully", Application.ProductName,
                                     MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                var obj = new ReceiptReport(intReceiptNumber.ToString(), strName,
+                                var obj = new ViewReceiptForm(intReceiptNumber.ToString(), strName,
                                     strFullAddress, dtAnadhanamDates, strChequeNumber, dtChequeDate.Value.Date,
                                     strChequeDrawn, strPaymentMode);
                                 Clear();
@@ -718,7 +718,7 @@ namespace ANNABABA.Forms
                             {
                                 MessageBox.Show(@"Anadhanam Updated Sucessfully", Application.ProductName,
                                     MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                var obj = new ReceiptReport(intReceiptNumber.ToString(), strName,
+                                var obj = new ViewReceiptForm(intReceiptNumber.ToString(), strName,
                                     strFullAddress, dtAnadhanamDates, strChequeNumber, dtChequeDate.Value.Date,
                                     strChequeDrawn, strPaymentMode);
                                 Clear();
@@ -800,7 +800,7 @@ namespace ANNABABA.Forms
 
         private void Availabality_Click(object sender, EventArgs e)
         {
-            var obj = new Availability(dtAnadhanamDate.Value.Date);
+            var obj = new AvailabilityForm(dtAnadhanamDate.Value.Date);
             obj.ShowDialog();
         }
 

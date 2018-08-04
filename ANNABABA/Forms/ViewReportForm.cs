@@ -8,10 +8,10 @@ using Microsoft.Reporting.WinForms;
 
 namespace ANNABABA.Forms
 {
-    public partial class AbcAnnadhanamReports : Form
+    public partial class ViewReportForm : Form
     {
         #region CONSTRUCTOR
-        public AbcAnnadhanamReports()
+        public ViewReportForm()
         {
             InitializeComponent();
 

@@ -128,7 +128,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "PrintInputForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "AnnaBabaCharities - [ Receipt Input Form]";
+            this.Text = "AnnaBabaCharities - [View Receipt Form]";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.PrintInputForm_FormClosing);
             this.Load += new System.EventHandler(this.PrintInputForm_Load);
             this.grbReceiptDetails.ResumeLayout(false);

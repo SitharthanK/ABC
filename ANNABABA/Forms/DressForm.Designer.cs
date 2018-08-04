@@ -1,6 +1,6 @@
 ﻿namespace ANNABABA.Forms
 {
-    partial class BookDressForm
+    partial class DressForm
     {
         /// <summary>
         /// Required designer variable.

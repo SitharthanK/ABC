@@ -1,6 +1,6 @@
 ﻿namespace ANNABABA.Forms
 {
-    partial class AnnaBabaCharities
+    partial class CreateForm
     {
         private System.ComponentModel.IContainer components = null;
 

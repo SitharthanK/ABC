@@ -7,11 +7,11 @@ using System.Windows.Forms;
 
 namespace ANNABABA.Forms
 {
-    public partial class AnnaBabaCharities : Form
+    public partial class CreateForm : Form
     {
         #region CONSTRUCTOR
 
-        public AnnaBabaCharities()
+        public CreateForm()
         {
             OnPageload = true;
 
@@ -95,7 +95,7 @@ namespace ANNABABA.Forms
 
         private void Report_Click(object sender, EventArgs e)
         {
-            AbcAnnadhanamReports obj = new AbcAnnadhanamReports();
+            ViewReportForm obj = new ViewReportForm();
             obj.ShowDialog();
         }
 
@@ -824,7 +824,7 @@ namespace ANNABABA.Forms
                             {
                                 MessageBox.Show(@"Anadhanam Created Sucessfully", Application.ProductName,
                                     MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                ReceiptReport obj = new ReceiptReport(intReceiptNumber.ToString(), strName,
+                                ViewReceiptForm obj = new ViewReceiptForm(intReceiptNumber.ToString(), strName,
                                     strFullAddress, dtAnadhanamDates, strChequeNumber, dtChequeDate.Value.Date,
                                     strChequeDrawn, strPaymentMode);
                                 Clear();
@@ -1061,7 +1061,7 @@ namespace ANNABABA.Forms
                             {
                                 MessageBox.Show(@"Anadhanam Created Sucessfully", Application.ProductName,
                                     MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                ReceiptReport obj = new ReceiptReport(intReceiptNumber.ToString(), strName,
+                                ViewReceiptForm obj = new ViewReceiptForm(intReceiptNumber.ToString(), strName,
                                     strFullAddress, dtAnadhanamDate.Value.Date, strChequeNumber,
                                     dtChequeDate.Value.Date, strChequeDrawn, strPaymentMode);
                                 Clear();
@@ -1198,7 +1198,7 @@ namespace ANNABABA.Forms
 
         private void Availability_Click(object sender, EventArgs e)
         {
-            Availability obj = new Availability(dtAnadhanamDate.Value.Date);
+            AvailabilityForm obj = new AvailabilityForm(dtAnadhanamDate.Value.Date);
             obj.ShowDialog();
         }
 

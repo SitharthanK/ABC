@@ -78,11 +78,11 @@
       <DependentUpon>ABCAnadhanamDetailsDataSet.xsd</DependentUpon>
     </Compile>
     <Compile Include="ABCAnadhanamDetailsDataSetTableAdapters.cs" />
-    <Compile Include="Forms\AbcAnnadhanamReports.cs">
+    <Compile Include="Forms\ViewReportForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\AbcAnnadhanamReports.Designer.cs">
-      <DependentUpon>AbcAnnadhanamReports.cs</DependentUpon>
+    <Compile Include="Forms\ViewReportForm.Designer.cs">
+      <DependentUpon>ViewReportForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ABCAnnadhanamReportsDataset.cs">
       <DependentUpon>ABCAnnadhanamReportsDataset.xsd</DependentUpon>
@@ -97,23 +97,23 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ABCReceiptDataset.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Forms\AnnaBabaCharities.cs">
+    <Compile Include="Forms\CreateForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\AnnaBabaCharities.Designer.cs">
-      <DependentUpon>AnnaBabaCharities.cs</DependentUpon>
+    <Compile Include="Forms\CreateForm.Designer.cs">
+      <DependentUpon>CreateForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Availability.cs">
+    <Compile Include="Forms\AvailabilityForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Availability.Designer.cs">
-      <DependentUpon>Availability.cs</DependentUpon>
+    <Compile Include="Forms\AvailabilityForm.Designer.cs">
+      <DependentUpon>AvailabilityForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\BookDressForm.cs">
+    <Compile Include="Forms\DressForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\BookDressForm.Designer.cs">
-      <DependentUpon>BookDressForm.cs</DependentUpon>
+    <Compile Include="Forms\DressForm.Designer.cs">
+      <DependentUpon>DressForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\EditForm.cs">
       <SubType>Form</SubType>
@@ -129,28 +129,28 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Forms\ReceiptReport.cs">
+    <Compile Include="Forms\ViewReceiptForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\ReceiptReport.Designer.cs">
-      <DependentUpon>ReceiptReport.cs</DependentUpon>
+    <Compile Include="Forms\ViewReceiptForm.Designer.cs">
+      <DependentUpon>ViewReceiptForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Resources\ABCAnadhanamDetailsDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ABCAnadhanamDetailsDataSet.xsd</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Forms\AbcAnnadhanamReports.resx">
-      <DependentUpon>AbcAnnadhanamReports.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\ViewReportForm.resx">
+      <DependentUpon>ViewReportForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\AnnaBabaCharities.resx">
-      <DependentUpon>AnnaBabaCharities.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\CreateForm.resx">
+      <DependentUpon>CreateForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Availability.resx">
-      <DependentUpon>Availability.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\AvailabilityForm.resx">
+      <DependentUpon>AvailabilityForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\BookDressForm.resx">
-      <DependentUpon>BookDressForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\DressForm.resx">
+      <DependentUpon>DressForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\EditForm.resx">
       <DependentUpon>EditForm.cs</DependentUpon>
@@ -170,8 +170,8 @@
     </Compile>
     <EmbeddedResource Include="RDLC\ABCReceiptReport.rdlc" />
     <EmbeddedResource Include="RDLC\ABCReportData.rdlc" />
-    <EmbeddedResource Include="Forms\ReceiptReport.resx">
-      <DependentUpon>ReceiptReport.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\ViewReceiptForm.resx">
+      <DependentUpon>ViewReceiptForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="ABCAnadhanamDetailsDataSet.xsc">
       <DependentUpon>ABCAnadhanamDetailsDataSet.xsd</DependentUpon>

@@ -6,9 +6,9 @@ using Microsoft.Reporting.WinForms;
 
 namespace ANNABABA.Forms
 {
-    public partial class ReceiptReport : Form
+    public partial class ViewReceiptForm : Form
     {
-        public ReceiptReport(string strReceiptNumber, string strName, string strFullAddress, DateTime dtAnadhanamDate,
+        public ViewReceiptForm(string strReceiptNumber, string strName, string strFullAddress, DateTime dtAnadhanamDate,
                              string strChequeNumber, DateTime dtChequeDate, string strChequeDrawn, string strPaymentMode)
         {
             InitializeComponent();
