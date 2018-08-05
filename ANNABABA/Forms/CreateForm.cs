@@ -101,7 +101,7 @@ namespace ANNABABA.Forms
 
         private void PrintRecipt_Click(object sender, EventArgs e)
         {
-            PrintInputForm obj = new PrintInputForm();
+            ViewReceiptForm obj = new ViewReceiptForm();
             obj.ShowDialog();
         }
 
@@ -824,7 +824,7 @@ namespace ANNABABA.Forms
                             {
                                 MessageBox.Show(@"Anadhanam Created Sucessfully", Application.ProductName,
                                     MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                ViewReceiptForm obj = new ViewReceiptForm(intReceiptNumber.ToString(), strName,
+                                PrintForm obj = new PrintForm(intReceiptNumber.ToString(), strName,
                                     strFullAddress, dtAnadhanamDates, strChequeNumber, dtChequeDate.Value.Date,
                                     strChequeDrawn, strPaymentMode);
                                 Clear();
@@ -1061,7 +1061,7 @@ namespace ANNABABA.Forms
                             {
                                 MessageBox.Show(@"Anadhanam Created Sucessfully", Application.ProductName,
                                     MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                ViewReceiptForm obj = new ViewReceiptForm(intReceiptNumber.ToString(), strName,
+                                PrintForm obj = new PrintForm(intReceiptNumber.ToString(), strName,
                                     strFullAddress, dtAnadhanamDate.Value.Date, strChequeNumber,
                                     dtChequeDate.Value.Date, strChequeDrawn, strPaymentMode);
                                 Clear();

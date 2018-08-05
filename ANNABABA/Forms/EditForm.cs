@@ -490,7 +490,7 @@ namespace ANNABABA.Forms
                             {
                                 MessageBox.Show(@"Anadhanam Updated Sucessfully", Application.ProductName,
                                     MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                var obj = new ViewReceiptForm(intReceiptNumber.ToString(), strName,
+                                var obj = new PrintForm(intReceiptNumber.ToString(), strName,
                                     strFullAddress, dtAnadhanamDates, strChequeNumber, dtChequeDate.Value.Date,
                                     strChequeDrawn, strPaymentMode);
                                 Clear();
@@ -718,7 +718,7 @@ namespace ANNABABA.Forms
                             {
                                 MessageBox.Show(@"Anadhanam Updated Sucessfully", Application.ProductName,
                                     MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                var obj = new ViewReceiptForm(intReceiptNumber.ToString(), strName,
+                                var obj = new PrintForm(intReceiptNumber.ToString(), strName,
                                     strFullAddress, dtAnadhanamDates, strChequeNumber, dtChequeDate.Value.Date,
                                     strChequeDrawn, strPaymentMode);
                                 Clear();
