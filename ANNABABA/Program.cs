@@ -14,7 +14,8 @@ namespace ANNABABA
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new CreateForm());
+            Application.Run(new DressForm());
+           // Application.Run(new CreateForm());
         }
     }
 }

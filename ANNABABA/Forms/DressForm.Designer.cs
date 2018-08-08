@@ -145,7 +145,7 @@
             // 
             // dgMonthdetails
             // 
-            this.dgMonthdetails.BackgroundColor = System.Drawing.SystemColors.Window;
+            this.dgMonthdetails.BackgroundColor = System.Drawing.SystemColors.ControlDark;
             this.dgMonthdetails.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgMonthdetails.Location = new System.Drawing.Point(17, 26);
             this.dgMonthdetails.Name = "dgMonthdetails";
@@ -153,7 +153,7 @@
             this.dgMonthdetails.TabIndex = 0;
             this.dgMonthdetails.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgMonthdetails_CellContentClick);
             // 
-            // BookDressForm
+            // DressForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -163,7 +163,7 @@
             this.Controls.Add(this.grbReceiptDetails);
             this.Controls.Add(this.lblHeader);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Name = "BookDressForm";
+            this.Name = "DressForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "BookDress";
             this.grbReceiptDetails.ResumeLayout(false);
