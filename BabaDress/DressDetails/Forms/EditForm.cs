@@ -10,35 +10,63 @@ using System.Windows.Forms;
 
 namespace DressDetails.Forms
 {
-    public partial class CreateForm : Form
+    public partial class EditForm : Form
     {
         #region PROPERTY
         Timer _timer;
         private SqlConnection _con;
         private readonly string _conn, _userName;
         public readonly int userId, isAdmin;
-        public bool blnDataGridCreations; 
+        public bool blnDataGridCreations;
         #endregion
 
-        #region Constructor
-        public CreateForm(int id, string name, int admin)
+        #region CONSTRUCTOR
+        public EditForm(int id, string name, int admin)
         {
-
             InitializeComponent();
             ddlYear_DataBing();
             ddlMonth_DataBing();
             StartTimer();
-
             MaximizeBox = false;
             _conn = ConfigurationManager.ConnectionStrings["Conn"].ToString();
-
-            userId = id; _userName = name; isAdmin = admin;
-            LblUsername.Text = @"Welcome.: " + _userName;
             blnDataGridCreations = false;
+            userId = id; _userName = name; isAdmin = admin;
+            lblUsername.Text = @"Welcome.: " + _userName;
 
             if (isAdmin == 1)
                 AddMenuAndItems();
-        } 
+        }
+        #endregion
+
+        #region MENU DETAILS
+
+        private void AddMenuAndItems()
+        {
+            Menu = new MainMenu();
+            MenuItem oFile = new MenuItem("File");
+            MenuItem oCreate = new MenuItem("Create");
+        
+            /*FILE MENU ITEMS*/
+            Menu.MenuItems.Add(oFile);
+            oFile.MenuItems.Add("Exit", ExitApplication_click);
+
+            /*EDIT MENU ITEMS*/
+            Menu.MenuItems.Add(oCreate);
+            oCreate.MenuItems.Add("Create", Create_Click);
+        }
+
+        private void Create_Click(object sender, EventArgs e)
+        {
+            CreateForm obj = new CreateForm(userId, _userName, isAdmin);
+            Hide();
+            obj.ShowDialog();
+        }
+
+        private void ExitApplication_click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
         #endregion
 
         #region TIMER VALIDATIONS
@@ -56,38 +84,8 @@ namespace DressDetails.Forms
         }
         #endregion
 
-        #region MENU DETAILS
-
-        private void AddMenuAndItems()
-        {
-            Menu = new MainMenu();
-            MenuItem oFile = new MenuItem("File");
-            MenuItem oEdit = new MenuItem("Edit");
-
-            /*FILE MENU ITEMS*/
-            Menu.MenuItems.Add(oFile);
-            oFile.MenuItems.Add("Exit", ExitApplication_click);
-
-            /*EDIT MENU ITEMS*/
-            Menu.MenuItems.Add(oEdit);
-            oEdit.MenuItems.Add("Update", Update_Click);
-        }
-
-        private void Update_Click(object sender, EventArgs e)
-        {
-            EditForm obj = new EditForm(userId, _userName, isAdmin);
-            Hide();
-            obj.ShowDialog();
-        }
-        private void ExitApplication_click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
-        #endregion
-
-        #region DROPDOWN LIST - MONTH & YEAR
-        private readonly Dictionary<int, string> _monthList = new Dictionary<int, string>()
+        #region DROP DOWN LIST - MONTH & YEAR
+        private static Dictionary<int, string> monthList = new Dictionary<int, string>()
         {
             { 0, "<-Select->"},
             { 1, "January"},
@@ -106,7 +104,7 @@ namespace DressDetails.Forms
 
         private void ddlMonth_DataBing()
         {
-            ddlMonth.DataSource = new BindingSource(_monthList, null);
+            ddlMonth.DataSource = new BindingSource(monthList, null);
             ddlMonth.DisplayMember = "Value";
             ddlMonth.ValueMember = "Key";
         }
@@ -134,6 +132,7 @@ namespace DressDetails.Forms
         {
             GetDressDetails();
         }
+
         #endregion
 
         #region DRESS DETAILS
@@ -207,8 +206,8 @@ namespace DressDetails.Forms
 
             DataGridViewButtonColumn btnSave = new DataGridViewButtonColumn();
             dgMonthdetails.Columns.Add(btnSave);
-            btnSave.HeaderText = @"Create";
-            btnSave.Text = "Create";
+            btnSave.HeaderText = @"Update";
+            btnSave.Text = "Update";
             btnSave.Name = "btnSave";
             btnSave.UseColumnTextForButtonValue = true;
 
@@ -227,6 +226,13 @@ namespace DressDetails.Forms
             dgMonthdetails.Columns[5].Width = 150;
             dgMonthdetails.Refresh();
             blnDataGridCreations = true;
+
+            DataGridViewButtonColumn btnDelete = new DataGridViewButtonColumn();
+            dgMonthdetails.Columns.Add(btnDelete);
+            btnDelete.HeaderText = @"Delete";
+            btnDelete.Text = "Delete";
+            btnDelete.Name = "btnDelete";
+            btnDelete.UseColumnTextForButtonValue = true;
         }
         private void PolulateGridDetails(DataTable table)
         {
@@ -277,12 +283,63 @@ namespace DressDetails.Forms
             dgMonthdetails.Refresh();
         }
 
-        private void InsertDressDetails(string date, string devoteeName, string address, string contactNumber)
+        private void dgMonthdetails_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 6)
+            {
+                DataGridViewRow row = dgMonthdetails.Rows[e.RowIndex];
+                if (row != null)
+                {
+                    string devoteeName = row.Cells["DEVOTEENAME"].Value.ToString();
+                    string address = row.Cells["ADDRESS"].Value.ToString();
+                    string contactNumber = row.Cells["CONTACTNUMBER"].Value.ToString();
+                    string date = row.Cells["BOOKINGDATE"].Value.ToString();
+                    DateTime bookingDate = DateTime.Parse(row.Cells["BOOKINGDATE"].Value.ToString());
+
+                    if (CheckIfRecordExistsDb(date, bookingDate.Month.ToString(), bookingDate.Year.ToString()))
+                        UpdateDressDetails(date, devoteeName, address, contactNumber);
+                    else
+                        MessageBox.Show(@"No bookings were found", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            if (e.ColumnIndex == 7)
+            {
+                DataGridViewRow row = dgMonthdetails.Rows[e.RowIndex];
+                if (row != null)
+                {
+                    row.Cells["DEVOTEENAME"].Value = "";
+                    row.Cells["ADDRESS"].Value = "";
+                    row.Cells["CONTACTNUMBER"].Value = "";
+                }
+            }
+
+            if (e.ColumnIndex == 8)
+            {
+                DataGridViewRow row = dgMonthdetails.Rows[e.RowIndex];
+                string date = row.Cells["BOOKINGDATE"].Value.ToString();
+                DateTime bookingDate = DateTime.Parse(row.Cells["BOOKINGDATE"].Value.ToString());
+
+                string message = "Do you want to delete this record?";
+                string title = "Delete";
+                MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+                DialogResult result = MessageBox.Show(message, title, buttons);
+
+                if (CheckIfRecordExistsDb(date, bookingDate.Month.ToString(), bookingDate.Year.ToString()))
+                {
+                    if (result == DialogResult.Yes)
+                        DeleteDressDetails(date);
+                }
+                else
+                    MessageBox.Show(@"No bookings were found", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void UpdateDressDetails(string date, string devoteeName, string address, string contactNumber)
         {
             DateTime bookingDate = DateTime.Parse(date);
-            string month = bookingDate.Month.ToString(), year = bookingDate.Year.ToString();
-            string strInsertQuery = "INSERT INTO DRESSDETAILS(BOOKEDDATE,DEVOTEENAME,ADDRESS,CONTACTNUMBER,BOOKEDMONTH,BOOKEDYEAR,InsertedBy)VALUES(@BOOKEDDATE,@DEVOTEENAME,@ADDRESS,@CONTACTNUMBER,@BOOKEDMONTH,@BOOKEDYEAR,@InsertedBy)";
-
+           
+            var strUpdateQuery = "UPDATE DRESSDETAILS Set DEVOTEENAME='" + devoteeName + "',Address='" + address.Trim() + "',ContactNumber='" + contactNumber + "',UpdatedBy='" + userId + "',UpdatedOn='" + DateTime.Now +
+                                "' WHERE BOOKEDDATE='" + bookingDate + "'";
 
             if (string.IsNullOrWhiteSpace(devoteeName))
             {
@@ -302,24 +359,46 @@ namespace DressDetails.Forms
             _con = new SqlConnection(_conn);
             _con.Open();
 
-            SqlCommand cm = new SqlCommand(strInsertQuery, _con);
-            cm.Parameters.AddWithValue("@BOOKEDDATE", bookingDate);
-            cm.Parameters.AddWithValue("@DEVOTEENAME", devoteeName);
-            cm.Parameters.AddWithValue("@ADDRESS", address);
-            cm.Parameters.AddWithValue("@CONTACTNUMBER", contactNumber);
-            cm.Parameters.AddWithValue("@BOOKEDMONTH", month);
-            cm.Parameters.AddWithValue("@BOOKEDYEAR", year);
-            cm.Parameters.AddWithValue("@InsertedBy", userId.ToString());
+            var cm = new SqlCommand(strUpdateQuery, _con);
             try
             {
-                int intAffectedRow = cm.ExecuteNonQuery();
+                var intAffectedRow = cm.ExecuteNonQuery();
                 if (intAffectedRow > 0)
                 {
-                    MessageBox.Show(@"Booked Sucessfully", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(@"Updated Sucessfully", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    MessageBox.Show(@"Booked Failed", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(@"Updation Failed", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                _con.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+        }
+
+        private void DeleteDressDetails(string date)
+        {
+            DateTime bookingDate = DateTime.Parse(date);
+       
+            var strDeleteQuery = "DELETE FROM DRESSDETAILS WHERE BOOKEDDATE='" + bookingDate + "'";
+            _con = new SqlConnection(_conn);
+            _con.Open();
+
+            var cm = new SqlCommand(strDeleteQuery, _con);
+            try
+            {
+                var intAffectedRow = cm.ExecuteNonQuery();
+                if (intAffectedRow > 0)
+                {
+                    MessageBox.Show(@"Deleted Sucessfully", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show(@"Deletion Failed", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 _con.Close();
             }
@@ -329,37 +408,6 @@ namespace DressDetails.Forms
             }
         }
 
-        private void dgMonthdetails_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.ColumnIndex == 6)
-            {
-                DataGridViewRow row = dgMonthdetails.Rows[e.RowIndex];
-                if (row != null)
-                {
-                    string devoteeName = row.Cells["DEVOTEENAME"].Value.ToString();
-                    string address = row.Cells["ADDRESS"].Value.ToString();
-                    string contactNumber = row.Cells["CONTACTNUMBER"].Value.ToString();
-                    string date = row.Cells["BOOKINGDATE"].Value.ToString();
-                    string month = Convert.ToDateTime(date).Month.ToString();
-                    string year = Convert.ToDateTime(date).Year.ToString();
-
-                    if (CheckIfRecordExistsDb(date, month, year))
-                        InsertDressDetails(date, devoteeName, address, contactNumber);
-                    else
-                        MessageBox.Show(@"Booked Failed - Devotee Details cannot be edited!.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            if (e.ColumnIndex == 7)
-            {
-                DataGridViewRow row = dgMonthdetails.Rows[e.RowIndex];
-                if (row != null)
-                {
-                    row.Cells["DEVOTEENAME"].Value = "";
-                    row.Cells["ADDRESS"].Value = "";
-                    row.Cells["CONTACTNUMBER"].Value = "";
-                }
-            }
-        }
         private bool CheckIfRecordExistsDb(string bookingDate, string month, string year)
         {
             try
@@ -387,10 +435,10 @@ namespace DressDetails.Forms
                                          BookDate = Convert.ToString(dr["BOOKEDDATE"]),
                                      }).Count();
                         if (count == 1)
-                            return false;
-                    }
+                            return true;
+                    } 
                 }
-                return true;
+                return false;
             }
             catch (Exception ex)
             {
@@ -403,17 +451,5 @@ namespace DressDetails.Forms
             }
         }
         #endregion
-    }
-
-    internal class DressDetails
-    {
-        public string BookDate { get; set; }
-        public string Name { get; set; }
-        public string Address { get; set; }
-        public string ContactNumber { get; set; }
-        public string Month { get; set; }
-        public string Year { get; set; }
-        public string IsCreated { get; set; }
-        public string IsUpdated { get; set; }
     }
 }

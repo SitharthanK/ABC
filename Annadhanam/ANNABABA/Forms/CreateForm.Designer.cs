@@ -21,7 +21,6 @@
             this.grbReceiptDetails = new System.Windows.Forms.GroupBox();
             this.lblSearchRecipt = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.txtoldReceiptNumber = new System.Windows.Forms.TextBox();
             this.btnEditDetails = new System.Windows.Forms.Button();
             this.lblDateValue = new System.Windows.Forms.Label();
             this.lblDate = new System.Windows.Forms.Label();
@@ -55,6 +54,7 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.btnPrint = new System.Windows.Forms.Button();
             this.btnClear = new System.Windows.Forms.Button();
+            this.txtoldReceiptNumber = new System.Windows.Forms.TextBox();
             this.grbReceiptDetails.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -95,16 +95,6 @@
             this.checkBox1.TabIndex = 7;
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // txtoldReceiptNumber
-            // 
-            this.txtoldReceiptNumber.Location = new System.Drawing.Point(179, 16);
-            this.txtoldReceiptNumber.MaxLength = 10;
-            this.txtoldReceiptNumber.Multiline = true;
-            this.txtoldReceiptNumber.Name = "txtoldReceiptNumber";
-            this.txtoldReceiptNumber.Size = new System.Drawing.Size(140, 25);
-            this.txtoldReceiptNumber.TabIndex = 6;
-            this.txtoldReceiptNumber.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtOldReceiptNumber_KeyPress);
             // 
             // btnEditDetails
             // 
@@ -469,7 +459,17 @@
             this.btnClear.UseVisualStyleBackColor = true;
             this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
             // 
-            // AnnaBabaCharities
+            // txtoldReceiptNumber
+            // 
+            this.txtoldReceiptNumber.Location = new System.Drawing.Point(179, 16);
+            this.txtoldReceiptNumber.MaxLength = 10;
+            this.txtoldReceiptNumber.Multiline = true;
+            this.txtoldReceiptNumber.Name = "txtoldReceiptNumber";
+            this.txtoldReceiptNumber.Size = new System.Drawing.Size(140, 25);
+            this.txtoldReceiptNumber.TabIndex = 6;
+            this.txtoldReceiptNumber.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtOldReceiptNumber_KeyPress);
+            // 
+            // CreateForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -480,7 +480,7 @@
             this.Controls.Add(this.lblHeader);
             this.Controls.Add(this.grbReceiptDetails);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Name = "AnnaBabaCharities";
+            this.Name = "CreateForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "AnnaBabaCharities - [Create Form]";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AnnaBabaCharities_FormClosing);
@@ -526,7 +526,6 @@
         private System.Windows.Forms.Button btnPrint;
         private System.Windows.Forms.Button btnEditDetails;
         private System.Windows.Forms.TextBox txtReceiptNumber;
-        private System.Windows.Forms.TextBox txtoldReceiptNumber;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.ComboBox cmbCity;
         private System.Windows.Forms.Label label4;
@@ -535,7 +534,7 @@
         private System.Windows.Forms.Label lblMobile;
         private System.Windows.Forms.TextBox txtMobileNumber;
         private System.Windows.Forms.Label lblSearchRecipt;
-
+        private System.Windows.Forms.TextBox txtoldReceiptNumber;
     }
 }
 

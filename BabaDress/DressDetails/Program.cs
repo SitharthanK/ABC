@@ -13,7 +13,7 @@ namespace DressDetails
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Forms.CreateForm());
+            Application.Run(new Forms.LoginForm());
         }
     }
 }

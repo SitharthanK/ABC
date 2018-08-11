@@ -1,6 +1,6 @@
 ﻿namespace DressDetails.Forms
 {
-    partial class CreateForm
+    partial class EditForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.grbReceiptDetails = new System.Windows.Forms.GroupBox();
             this.ddlYear = new System.Windows.Forms.ComboBox();
+            this.grbReceiptDetails = new System.Windows.Forms.GroupBox();
             this.lblReceiptNumber = new System.Windows.Forms.Label();
             this.ddlMonth = new System.Windows.Forms.ComboBox();
             this.lblSearchRecipt = new System.Windows.Forms.Label();
@@ -38,25 +38,11 @@
             this.lblHeader = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.dgMonthdetails = new System.Windows.Forms.DataGridView();
-            this.LblUsername = new System.Windows.Forms.Label();
+            this.lblUsername = new System.Windows.Forms.Label();
             this.grbReceiptDetails.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgMonthdetails)).BeginInit();
             this.SuspendLayout();
-            // 
-            // grbReceiptDetails
-            // 
-            this.grbReceiptDetails.Controls.Add(this.ddlYear);
-            this.grbReceiptDetails.Controls.Add(this.lblReceiptNumber);
-            this.grbReceiptDetails.Controls.Add(this.ddlMonth);
-            this.grbReceiptDetails.Controls.Add(this.lblSearchRecipt);
-            this.grbReceiptDetails.Controls.Add(this.lblDateValue);
-            this.grbReceiptDetails.Controls.Add(this.lblDate);
-            this.grbReceiptDetails.Location = new System.Drawing.Point(12, 66);
-            this.grbReceiptDetails.Name = "grbReceiptDetails";
-            this.grbReceiptDetails.Size = new System.Drawing.Size(919, 56);
-            this.grbReceiptDetails.TabIndex = 6;
-            this.grbReceiptDetails.TabStop = false;
             // 
             // ddlYear
             // 
@@ -71,6 +57,20 @@
             this.ddlYear.Size = new System.Drawing.Size(86, 21);
             this.ddlYear.TabIndex = 13;
             this.ddlYear.SelectedValueChanged += new System.EventHandler(this.ddlYear_SelectedValueChanged);
+            // 
+            // grbReceiptDetails
+            // 
+            this.grbReceiptDetails.Controls.Add(this.ddlYear);
+            this.grbReceiptDetails.Controls.Add(this.lblReceiptNumber);
+            this.grbReceiptDetails.Controls.Add(this.ddlMonth);
+            this.grbReceiptDetails.Controls.Add(this.lblSearchRecipt);
+            this.grbReceiptDetails.Controls.Add(this.lblDateValue);
+            this.grbReceiptDetails.Controls.Add(this.lblDate);
+            this.grbReceiptDetails.Location = new System.Drawing.Point(29, 68);
+            this.grbReceiptDetails.Name = "grbReceiptDetails";
+            this.grbReceiptDetails.Size = new System.Drawing.Size(919, 56);
+            this.grbReceiptDetails.TabIndex = 9;
+            this.grbReceiptDetails.TabStop = false;
             // 
             // lblReceiptNumber
             // 
@@ -87,10 +87,10 @@
             this.ddlMonth.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddlMonth.IntegralHeight = false;
             this.ddlMonth.ItemHeight = 13;
-            this.ddlMonth.Location = new System.Drawing.Point(434, 19);
+            this.ddlMonth.Location = new System.Drawing.Point(402, 19);
             this.ddlMonth.MaxDropDownItems = 10;
             this.ddlMonth.Name = "ddlMonth";
-            this.ddlMonth.Size = new System.Drawing.Size(122, 21);
+            this.ddlMonth.Size = new System.Drawing.Size(147, 21);
             this.ddlMonth.TabIndex = 10;
             this.ddlMonth.SelectedValueChanged += new System.EventHandler(this.ddlMonth_SelectedValueChanged);
             // 
@@ -98,7 +98,7 @@
             // 
             this.lblSearchRecipt.AutoSize = true;
             this.lblSearchRecipt.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSearchRecipt.Location = new System.Drawing.Point(367, 20);
+            this.lblSearchRecipt.Location = new System.Drawing.Point(335, 20);
             this.lblSearchRecipt.Name = "lblSearchRecipt";
             this.lblSearchRecipt.Size = new System.Drawing.Size(68, 19);
             this.lblSearchRecipt.TabIndex = 8;
@@ -126,12 +126,12 @@
             // lblHeader
             // 
             this.lblHeader.AutoSize = true;
-            this.lblHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 23F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblHeader.ForeColor = System.Drawing.Color.Blue;
-            this.lblHeader.Location = new System.Drawing.Point(230, 13);
+            this.lblHeader.Location = new System.Drawing.Point(269, 15);
             this.lblHeader.Name = "lblHeader";
-            this.lblHeader.Size = new System.Drawing.Size(365, 35);
-            this.lblHeader.TabIndex = 5;
+            this.lblHeader.Size = new System.Drawing.Size(439, 42);
+            this.lblHeader.TabIndex = 8;
             this.lblHeader.Text = "ANNA BABA CHARITIES";
             // 
             // groupBox1
@@ -139,10 +139,10 @@
             this.groupBox1.Controls.Add(this.dgMonthdetails);
             this.groupBox1.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Bold);
             this.groupBox1.ForeColor = System.Drawing.Color.Maroon;
-            this.groupBox1.Location = new System.Drawing.Point(12, 130);
+            this.groupBox1.Location = new System.Drawing.Point(29, 132);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(919, 490);
-            this.groupBox1.TabIndex = 7;
+            this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Monthly Details : ";
             // 
@@ -156,30 +156,30 @@
             this.dgMonthdetails.TabIndex = 0;
             this.dgMonthdetails.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgMonthdetails_CellContentClick);
             // 
-            // LblUsername
+            // lblUsername
             // 
-            this.LblUsername.AutoSize = true;
-            this.LblUsername.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LblUsername.ForeColor = System.Drawing.Color.Maroon;
-            this.LblUsername.Location = new System.Drawing.Point(725, 21);
-            this.LblUsername.MinimumSize = new System.Drawing.Size(200, 0);
-            this.LblUsername.Name = "LblUsername";
-            this.LblUsername.Size = new System.Drawing.Size(200, 17);
-            this.LblUsername.TabIndex = 8;
-            this.LblUsername.Text = "Welcome: ";
+            this.lblUsername.AutoSize = true;
+            this.lblUsername.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblUsername.ForeColor = System.Drawing.Color.Maroon;
+            this.lblUsername.Location = new System.Drawing.Point(743, 27);
+            this.lblUsername.MinimumSize = new System.Drawing.Size(200, 0);
+            this.lblUsername.Name = "lblUsername";
+            this.lblUsername.Size = new System.Drawing.Size(200, 17);
+            this.lblUsername.TabIndex = 12;
+            this.lblUsername.Text = "Welcome: ";
             // 
-            // CreateForm
+            // EditForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Turquoise;
-            this.ClientSize = new System.Drawing.Size(943, 632);
-            this.Controls.Add(this.LblUsername);
+            this.ClientSize = new System.Drawing.Size(976, 640);
+            this.Controls.Add(this.lblUsername);
             this.Controls.Add(this.grbReceiptDetails);
             this.Controls.Add(this.lblHeader);
             this.Controls.Add(this.groupBox1);
-            this.Name = "CreateForm";
-            this.Text = "Create Form";
+            this.Name = "EditForm";
+            this.Text = "EditForm";
             this.grbReceiptDetails.ResumeLayout(false);
             this.grbReceiptDetails.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -191,7 +191,9 @@
 
         #endregion
 
+        private System.Windows.Forms.ComboBox ddlYear;
         private System.Windows.Forms.GroupBox grbReceiptDetails;
+        private System.Windows.Forms.Label lblReceiptNumber;
         private System.Windows.Forms.ComboBox ddlMonth;
         private System.Windows.Forms.Label lblSearchRecipt;
         private System.Windows.Forms.Label lblDateValue;
@@ -199,8 +201,6 @@
         private System.Windows.Forms.Label lblHeader;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.DataGridView dgMonthdetails;
-        private System.Windows.Forms.ComboBox ddlYear;
-        private System.Windows.Forms.Label lblReceiptNumber;
-        private System.Windows.Forms.Label LblUsername;
+        private System.Windows.Forms.Label lblUsername;
     }
 }
