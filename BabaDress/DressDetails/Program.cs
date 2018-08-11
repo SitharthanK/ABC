@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
-using ANNABABA.Forms;
 
-namespace ANNABABA
+namespace DressDetails
 {
     static class Program
     {
@@ -14,8 +13,7 @@ namespace ANNABABA
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new DressForm());
-           // Application.Run(new CreateForm());
+            Application.Run(new Forms.CreateForm());
         }
     }
 }

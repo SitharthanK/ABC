@@ -56,6 +56,7 @@
     <Reference Include="Microsoft.ReportViewer.WinForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
@@ -109,12 +110,6 @@
     <Compile Include="Forms\AvailabilityForm.Designer.cs">
       <DependentUpon>AvailabilityForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\DressForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\DressForm.Designer.cs">
-      <DependentUpon>DressForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\EditForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -148,9 +143,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AvailabilityForm.resx">
       <DependentUpon>AvailabilityForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\DressForm.resx">
-      <DependentUpon>DressForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\EditForm.resx">
       <DependentUpon>EditForm.cs</DependentUpon>
