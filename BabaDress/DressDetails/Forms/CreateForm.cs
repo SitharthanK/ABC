@@ -17,13 +17,12 @@ namespace DressDetails.Forms
         private SqlConnection _con;
         private readonly string _conn, _userName;
         public readonly int userId, isAdmin;
-        public bool blnDataGridCreations; 
+        public bool blnDataGridCreations;
         #endregion
 
         #region Constructor
         public CreateForm(int id, string name, int admin)
         {
-
             InitializeComponent();
             ddlYear_DataBing();
             ddlMonth_DataBing();
@@ -38,7 +37,7 @@ namespace DressDetails.Forms
 
             if (isAdmin == 1)
                 AddMenuAndItems();
-        } 
+        }
         #endregion
 
         #region TIMER VALIDATIONS
@@ -63,6 +62,7 @@ namespace DressDetails.Forms
             Menu = new MainMenu();
             MenuItem oFile = new MenuItem("File");
             MenuItem oEdit = new MenuItem("Edit");
+            MenuItem oProfile = new MenuItem("Profile");
 
             /*FILE MENU ITEMS*/
             Menu.MenuItems.Add(oFile);
@@ -71,6 +71,10 @@ namespace DressDetails.Forms
             /*EDIT MENU ITEMS*/
             Menu.MenuItems.Add(oEdit);
             oEdit.MenuItems.Add("Update", Update_Click);
+
+            /*EDIT MENU ITEMS*/
+            Menu.MenuItems.Add(oProfile);
+            oProfile.MenuItems.Add("View Profile", Profile_Click);
         }
 
         private void Update_Click(object sender, EventArgs e)
@@ -79,10 +83,18 @@ namespace DressDetails.Forms
             Hide();
             obj.ShowDialog();
         }
+
+        private void Profile_Click(object sender, EventArgs e)
+        {
+            ProfileForm obj = new ProfileForm(userId, _userName, isAdmin);
+            Hide();
+            obj.ShowDialog();
+        }
         private void ExitApplication_click(object sender, EventArgs e)
         {
             Application.Exit();
         }
+
 
         #endregion
 
@@ -346,7 +358,7 @@ namespace DressDetails.Forms
                     if (CheckIfRecordExistsDb(date, month, year))
                         InsertDressDetails(date, devoteeName, address, contactNumber);
                     else
-                        MessageBox.Show(@"Booked Failed - Devotee Details cannot be edited!.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(@"Booked Failed - Details cannot be edited!.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             if (e.ColumnIndex == 7)
@@ -354,9 +366,18 @@ namespace DressDetails.Forms
                 DataGridViewRow row = dgMonthdetails.Rows[e.RowIndex];
                 if (row != null)
                 {
-                    row.Cells["DEVOTEENAME"].Value = "";
-                    row.Cells["ADDRESS"].Value = "";
-                    row.Cells["CONTACTNUMBER"].Value = "";
+                    string date = row.Cells["BOOKINGDATE"].Value.ToString();
+                    string month = Convert.ToDateTime(date).Month.ToString();
+                    string year = Convert.ToDateTime(date).Year.ToString();
+
+                    if (CheckIfRecordExistsDb(date, month, year))
+                    {
+                        row.Cells["DEVOTEENAME"].Value = "";
+                        row.Cells["ADDRESS"].Value = "";
+                        row.Cells["CONTACTNUMBER"].Value = "";
+                    }
+                    else
+                        MessageBox.Show(@"Clear Failed - Devotee Details cannot be edited!.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }

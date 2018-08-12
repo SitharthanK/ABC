@@ -45,14 +45,19 @@ namespace DressDetails.Forms
             Menu = new MainMenu();
             MenuItem oFile = new MenuItem("File");
             MenuItem oCreate = new MenuItem("Create");
-        
+            MenuItem oProfile = new MenuItem("Profile");
+
             /*FILE MENU ITEMS*/
             Menu.MenuItems.Add(oFile);
             oFile.MenuItems.Add("Exit", ExitApplication_click);
 
-            /*EDIT MENU ITEMS*/
+            /*CREATE MENU ITEMS*/
             Menu.MenuItems.Add(oCreate);
             oCreate.MenuItems.Add("Create", Create_Click);
+
+            /*PROFILE MENU ITEMS*/
+            Menu.MenuItems.Add(oProfile);
+            oProfile.MenuItems.Add("View Profile", Profile_Click);
         }
 
         private void Create_Click(object sender, EventArgs e)
@@ -62,10 +67,17 @@ namespace DressDetails.Forms
             obj.ShowDialog();
         }
 
+        private void Profile_Click(object sender, EventArgs e)
+        {
+            ProfileForm obj = new ProfileForm(userId, _userName, isAdmin);
+            Hide();
+            obj.ShowDialog();
+        }
         private void ExitApplication_click(object sender, EventArgs e)
         {
             Application.Exit();
         }
+
 
         #endregion
 
