@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlServerCe;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -128,7 +129,7 @@ namespace ANNABABA.Forms
 
         void tmr_Tick(object sender, EventArgs e)
         {
-            lblDateValue.Text = DateTime.Now.ToString();
+            lblDateValue.Text = DateTime.Now.ToString(CultureInfo.InvariantCulture);
         }
 
         #endregion
@@ -412,7 +413,7 @@ namespace ANNABABA.Forms
                         cmbState.DataSource = new BindingSource(_stateList, null);
                         cmbState.DisplayMember = "StateName";
                         cmbState.ValueMember = "StateId";
-                        cmbState.SelectedValue = _stateList.FirstOrDefault()?.StateId.ToString();
+                        cmbState.SelectedValue = _stateList.FirstOrDefault()?.StateId;
                         cmbCity.Enabled = false;
 
                         _intCityCode = 0;
@@ -427,7 +428,7 @@ namespace ANNABABA.Forms
                         cmbCity.DataSource = new BindingSource(_cityList, null);
                         cmbCity.DisplayMember = "CityName";
                         cmbCity.ValueMember = "CityId";
-                        cmbCity.SelectedValue = _cityList.FirstOrDefault()?.CityId.ToString();
+                        cmbCity.SelectedValue = _cityList.FirstOrDefault()?.CityId;
                     }
                 }
                 catch (Exception ex)
@@ -487,9 +488,9 @@ namespace ANNABABA.Forms
                         cmbCity.DataSource = new BindingSource(_cityList, null);
                         cmbCity.DisplayMember = "CityName";
                         cmbCity.ValueMember = "CityId";
-                        cmbCity.SelectedValue = _cityList.FirstOrDefault()?.CityId.ToString();
+                        cmbCity.SelectedValue = _cityList.FirstOrDefault()?.CityId;
 
-                        if (OnPageload == true)
+                        if (OnPageload)
                         {
                             string stateCode = (from p in _stateList
                                 where p.StateName.ToUpper().Contains("TAMIL NADU")
@@ -508,7 +509,7 @@ namespace ANNABABA.Forms
                                 cmbCity.DataSource = new BindingSource(_cityList, null);
                                 cmbCity.DisplayMember = "CityName";
                                 cmbCity.ValueMember = "CityId";
-                                cmbCity.SelectedValue = _cityList.FirstOrDefault()?.CityId.ToString();
+                                cmbCity.SelectedValue = _cityList.FirstOrDefault()?.CityId;
                             }
                         }
                         else
@@ -529,7 +530,7 @@ namespace ANNABABA.Forms
                                 cmbCity.DataSource = new BindingSource(_cityList, null);
                                 cmbCity.DisplayMember = "CityName";
                                 cmbCity.ValueMember = "CityId";
-                                cmbCity.SelectedValue = _cityList.FirstOrDefault()?.CityId.ToString();
+                                cmbCity.SelectedValue = _cityList.FirstOrDefault()?.CityId;
                             }
                         }
                     }
@@ -543,13 +544,13 @@ namespace ANNABABA.Forms
                                 CountryId = _intCountryCode.ToString(),
                                 StateId = _intStateCode.ToString(),
                                 CityId = _intCityCode.ToString(),
-                                CityName = ("<--No Records-->").ToString()
+                                CityName = @"<--No Records-->"
                             }
                         };
                         cmbCity.DataSource = new BindingSource(_cityList, null);
                         cmbCity.DisplayMember = "CityName";
                         cmbCity.ValueMember = "CityId";
-                        cmbCity.SelectedValue = _cityList.FirstOrDefault()?.CityId.ToString();
+                        cmbCity.SelectedValue = _cityList.FirstOrDefault()?.CityId;
                     }
                 }
                 catch (Exception ex)
@@ -593,7 +594,7 @@ namespace ANNABABA.Forms
 
         private void btnPrint_Click(object sender, EventArgs e)
         {
-            string strPaymentMode = "", strState = "", strCountry = "", strName = "", strContactNumber = "";
+            string strPaymentMode, strState = "", strCountry = "", strName = "", strContactNumber = "";
             string strAddress = "", strCity = "", strChequeNumber = "", strChequeDrawn = "";
             int intReceiptNumber;
             bool blnSubmit = false;
@@ -772,7 +773,7 @@ namespace ANNABABA.Forms
                     if (!string.IsNullOrEmpty(txtMobileNumber.Text) && txtMobileNumber.Text.Length == 10)
                     {
                         blnSubmit = true;
-                        strContactNumber = txtMobileNumber.Text.ToString();
+                        strContactNumber = txtMobileNumber.Text;
                     }
 
                     #endregion
@@ -957,7 +958,8 @@ namespace ANNABABA.Forms
 
                     if (_intStateCode != 0 && cmbState.SelectedItem != null)
                     {
-                        StateDetails selectedState = (StateDetails) cmbState.SelectedItem;
+                        StateDetails selectedState;
+                        selectedState = (StateDetails) cmbState.SelectedItem;
                         strState = Convert.ToString(selectedState.StateName);
                         blnSubmit = true;
                     }
@@ -1127,7 +1129,7 @@ namespace ANNABABA.Forms
                 OpenSqlCeConnection();
                 DateTime dtAnadhanamDates = new DateTime(dtAnadhanamDate.Value.Year, dtAnadhanamDate.Value.Month,
                     dtAnadhanamDate.Value.Day, 12, 0, 0);
-                string strCurrentDate = dtAnadhanamDates.ToString();
+                string strCurrentDate = dtAnadhanamDates.ToString(CultureInfo.CurrentCulture);
                 string strSelectQuery =
                     "SELECT COUNT(ReceiptNumber) AS CNT FROM  tblAnnadhanamDetails WHERE (AnadhanamDate='" +
                     strCurrentDate + "')";
@@ -1316,8 +1318,8 @@ namespace ANNABABA.Forms
                                     txtDrawnOn.Enabled = true;
                                     dtChequeDate.Enabled = true;
 
-                                    txtChequeNumber.Text = Convert.ToString(dr["ChequeNo"]) ?? string.Empty;
-                                    txtDrawnOn.Text = Convert.ToString(dr["ChequeDrawn"]) ?? string.Empty;
+                                    txtChequeNumber.Text = Convert.ToString(dr["ChequeNo"]);
+                                    txtDrawnOn.Text = Convert.ToString(dr["ChequeDrawn"]);
                                     if (Convert.ToDateTime(dr["ChequeDate"]).Date != null)
                                     {
                                         DateTime dtPreviousChequeDate = Convert.ToDateTime(dr["ChequeDate"]).Date;

@@ -159,7 +159,9 @@ namespace DressDetails.Forms
                     _con = new SqlConnection(conn);
                     _con.Open();
 
-                    string strQuery = @"SELECT * FROM  DRESSDETAILS  WHERE BookedMonth='" + ddlMonth.SelectedValue + "' AND BookedYear='" + ddlYear.SelectedValue + "'";
+                    string strQuery = @"SELECT T1.DEVOTEENAME,T1.ADDRESS,T1.CONTACTNUMBER,T1.BOOKEDDATE,T1.BOOKEDMONTH,T1.BOOKEDYEAR,T2.NAME,T1.InsertedOn FROM  DRESSDETAILS T1 INNER JOIN LOGINDETAILS T2 ON T1.InsertedBy=T2.ID  WHERE T1.BookedMonth='" + ddlMonth.SelectedValue + "' AND T1.BookedYear='" + ddlYear.SelectedValue + "'";
+                
+                    //string strQuery = @"SELECT * FROM  DRESSDETAILS  WHERE BookedMonth='" + ddlMonth.SelectedValue + "' AND BookedYear='" + ddlYear.SelectedValue + "'";
                     SqlCommand cm = new SqlCommand(strQuery, _con)
                     {
                         CommandText = strQuery,
@@ -230,21 +232,38 @@ namespace DressDetails.Forms
             btnClear.Name = "btnClear";
             btnClear.UseColumnTextForButtonValue = true;
 
-            dgMonthdetails.Columns[0].Width = 50;
-            dgMonthdetails.Columns[1].Width = 120;
-            dgMonthdetails.Columns[2].Width = 100;
-            dgMonthdetails.Columns[3].Width = 140;
-            dgMonthdetails.Columns[4].Width = 250;
-            dgMonthdetails.Columns[5].Width = 150;
-            dgMonthdetails.Refresh();
-            blnDataGridCreations = true;
-
             DataGridViewButtonColumn btnDelete = new DataGridViewButtonColumn();
             dgMonthdetails.Columns.Add(btnDelete);
             btnDelete.HeaderText = @"Delete";
             btnDelete.Text = "Delete";
             btnDelete.Name = "btnDelete";
             btnDelete.UseColumnTextForButtonValue = true;
+
+            DataGridTextBoxColumn CreatedBy = new DataGridTextBoxColumn();
+            dgMonthdetails.Columns.Add("CREATEDBY", "Created By");
+            CreatedBy.TextBox.Name = "CREATEDBY";
+            CreatedBy.Alignment = HorizontalAlignment.Left;
+
+            DataGridTextBoxColumn CreatedOn = new DataGridTextBoxColumn();
+            dgMonthdetails.Columns.Add("CREATEDON", "Created On");
+            CreatedOn.TextBox.Name = "CREATEDON";
+            CreatedOn.Alignment = HorizontalAlignment.Left;
+
+
+            dgMonthdetails.Columns[0].Width = 50;
+            dgMonthdetails.Columns[1].Width = 120;
+            dgMonthdetails.Columns[2].Width = 100;
+            dgMonthdetails.Columns[3].Width = 140;
+            dgMonthdetails.Columns[4].Width = 250;
+            dgMonthdetails.Columns[5].Width = 150;
+            dgMonthdetails.Columns["SLNO"].ReadOnly = true;
+            dgMonthdetails.Columns["BOOKINGDATE"].ReadOnly = true;
+            dgMonthdetails.Columns["Days"].ReadOnly = true;
+            dgMonthdetails.Columns["CREATEDBY"].ReadOnly = true;
+            dgMonthdetails.Columns["CREATEDON"].ReadOnly = true;
+            dgMonthdetails.Refresh();
+            blnDataGridCreations = true;
+           
         }
         private void PolulateGridDetails(DataTable table)
         {
@@ -265,14 +284,18 @@ namespace DressDetails.Forms
                                Address = Convert.ToString(dr["ADDRESS"]),
                                ContactNumber = Convert.ToString(dr["CONTACTNUMBER"]),
                                Month = Convert.ToString(dr["BOOKEDMONTH"]),
-                               Year = Convert.ToString(dr["BOOKEDYEAR"])
+                               Year = Convert.ToString(dr["BOOKEDYEAR"]),
+                               CreatedBy = Convert.ToString(dr["NAME"]),
+                               CreatedOn = Convert.ToDateTime(dr["InsertedOn"], CultureInfo.CurrentCulture),
+
                            }).FirstOrDefault();
 
                 slno = slno + 1;
                 if (row != null && Convert.ToDateTime(day).Date == Convert.ToDateTime(row.BookDate).Date)
-                    dgMonthdetails.Rows.Add(slno.ToString(), DateTime.Parse(row.BookDate).ToString("dd/MMM/yyyy"), day.DayOfWeek.ToString(), row.Name, row.Address, row.ContactNumber);
+                    dgMonthdetails.Rows.Add(slno.ToString(), DateTime.Parse(row.BookDate).ToString("dd/MMM/yyyy"), day.DayOfWeek.ToString(), row.Name, row.Address, row.ContactNumber,"","","",row.CreatedBy,row.CreatedOn);
                 else
                     dgMonthdetails.Rows.Add(slno.ToString(), day.Date.ToString("dd/MMM/yyyy"), day.DayOfWeek.ToString(), "", "", "");
+              
             }
 
             foreach (DataGridViewRow row in dgMonthdetails.Rows)
@@ -293,6 +316,7 @@ namespace DressDetails.Forms
                 dgMonthdetails.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             }
             dgMonthdetails.Refresh();
+            dgMonthdetails.Focus();
         }
 
         private void dgMonthdetails_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -349,7 +373,7 @@ namespace DressDetails.Forms
         private void UpdateDressDetails(string date, string devoteeName, string address, string contactNumber)
         {
             DateTime bookingDate = DateTime.Parse(date);
-           
+
             var strUpdateQuery = "UPDATE DRESSDETAILS Set DEVOTEENAME='" + devoteeName + "',Address='" + address.Trim() + "',ContactNumber='" + contactNumber + "',UpdatedBy='" + userId + "',UpdatedOn='" + DateTime.Now +
                                 "' WHERE BOOKEDDATE='" + bookingDate + "'";
 
@@ -395,7 +419,7 @@ namespace DressDetails.Forms
         private void DeleteDressDetails(string date)
         {
             DateTime bookingDate = DateTime.Parse(date);
-       
+
             var strDeleteQuery = "DELETE FROM DRESSDETAILS WHERE BOOKEDDATE='" + bookingDate + "'";
             _con = new SqlConnection(_conn);
             _con.Open();
@@ -448,7 +472,7 @@ namespace DressDetails.Forms
                                      }).Count();
                         if (count == 1)
                             return true;
-                    } 
+                    }
                 }
                 return false;
             }
@@ -461,6 +485,22 @@ namespace DressDetails.Forms
             {
                 _con.Close();
             }
+        }
+
+        private class DressDetails
+        {
+            public string BookDate { get; set; }
+            public string Name { get; set; }
+            public string Address { get; set; }
+            public string ContactNumber { get; set; }
+            public string Month { get; set; }
+            public string Year { get; set; }
+            public string IsCreated { get; set; }
+            public string IsUpdated { get; set; }
+            public string CreatedBy { get; set; }
+            public DateTime CreatedOn { get; set; }
+            public string UpdatedBy { get; set; }
+            public DateTime UpdatedOn { get; set; }
         }
         #endregion
     }

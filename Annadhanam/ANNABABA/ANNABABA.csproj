@@ -135,6 +135,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ABCAnadhanamDetailsDataSet.xsd</DependentUpon>
     </Compile>
+    <Compile Include="SQL\TableScripts.cs" />
     <EmbeddedResource Include="Forms\ViewReportForm.resx">
       <DependentUpon>ViewReportForm.cs</DependentUpon>
     </EmbeddedResource>

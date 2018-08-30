@@ -161,7 +161,7 @@
             this.LblUsername.AutoSize = true;
             this.LblUsername.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LblUsername.ForeColor = System.Drawing.Color.Maroon;
-            this.LblUsername.Location = new System.Drawing.Point(725, 21);
+            this.LblUsername.Location = new System.Drawing.Point(635, 24);
             this.LblUsername.MinimumSize = new System.Drawing.Size(200, 0);
             this.LblUsername.Name = "LblUsername";
             this.LblUsername.Size = new System.Drawing.Size(200, 17);

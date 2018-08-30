@@ -20,7 +20,7 @@ namespace DressDetails.Forms
         {
             try
             {
-                if (!string.IsNullOrWhiteSpace(txtUserName.Text))
+                if (!string.IsNullOrWhiteSpace(txtUserName.Text) && !string.IsNullOrWhiteSpace(txtPassword.Text))
                 {
                     string strQuery;
                     string conn = ConfigurationManager.ConnectionStrings["Conn"].ToString();
@@ -29,7 +29,7 @@ namespace DressDetails.Forms
                     if (rbtnAdmin.Checked)
                         strQuery = @"SELECT ID,Name,IsAdmin FROM  LOGINDETAILS WHERE UserName='" + txtUserName.Text + "' AND Password='" + txtPassword.Text + "' AND IsActive=1 AND IsAdmin=1";
                     else
-                        strQuery = @"SELECT ID,Name,IsAdmin FROM  LOGINDETAILS WHERE UserName='" + txtUserName.Text + "' AND IsActive=1 AND IsAdmin=0";
+                        strQuery = @"SELECT ID,Name,IsAdmin FROM  LOGINDETAILS WHERE UserName='" + txtUserName.Text + "' AND Password='" + txtPassword.Text + "' AND IsActive=1 AND IsAdmin=0";
 
                     SqlCommand cm = new SqlCommand(strQuery, _con)
                     {
@@ -59,6 +59,9 @@ namespace DressDetails.Forms
 
                     _con.Close();
                 }
+                else
+                    MessageBox.Show(@"Incorrect UserName or Password", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+
             }
             catch (Exception ex)
             {
