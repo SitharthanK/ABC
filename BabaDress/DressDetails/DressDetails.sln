@@ -1,8 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2042
-MinimumVisualStudioVersion = 10.0.40219.1
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DressDetails", "DressDetails.csproj", "{118E483D-DEDB-41B8-B525-77400AEEE599}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "ABCDress", "..\ABCDress\ABCDress.vdproj", "{A62D9057-1F10-4BF6-B7C6-3992C76955C6}"

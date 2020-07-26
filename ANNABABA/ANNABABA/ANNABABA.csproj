@@ -1,0 +1,304 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C29DC2AE-AFB7-48F4-B082-7EBD96D4E465}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ANNABABA</RootNamespace>
+    <AssemblyName>ANNABABA</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>ANNABABA.Program</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.ReportViewer.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ReportViewer.Common.10.0.40219.1\lib\Microsoft.ReportViewer.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.DataVisualization, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ReportViewer.Common.10.0.40219.1\lib\Microsoft.ReportViewer.DataVisualization.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.ProcessingObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ReportViewer.Common.10.0.40219.1\lib\Microsoft.ReportViewer.ProcessingObjectModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.WinForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ABCAnadhanamDetailsDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ABCAnadhanamDetailsDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="ABCAnadhanamDetailsDataSetTableAdapters.cs" />
+    <Compile Include="Forms\ABCAnnadhanamReports.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ABCAnnadhanamReports.Designer.cs">
+      <DependentUpon>ABCAnnadhanamReports.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ABCAnnadhanamReportsDataset.cs">
+      <DependentUpon>ABCAnnadhanamReportsDataset.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="ABCAnnadhanamReportsDataset.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ABCAnnadhanamReportsDataset.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="ABCReceiptDataset.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ABCReceiptDataset.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Configure.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Configure.Designer.cs">
+      <DependentUpon>Configure.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Create.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Create.Designer.cs">
+      <DependentUpon>Create.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Availability.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Availability.Designer.cs">
+      <DependentUpon>Availability.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Edit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Edit.Designer.cs">
+      <DependentUpon>Edit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\View.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\View.Designer.cs">
+      <DependentUpon>View.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\SqlHelper.cs" />
+    <Compile Include="Models\Availability.cs" />
+    <Compile Include="Models\CityDetails.cs" />
+    <Compile Include="Models\ConfigurationDetails.cs" />
+    <Compile Include="Models\PaymentMode.cs" />
+    <Compile Include="Models\CountryDetails.cs" />
+    <Compile Include="Models\Devotee.cs" />
+    <Compile Include="Models\StateDetails.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Forms\Receipt.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Receipt.Designer.cs">
+      <DependentUpon>Receipt.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\ABCAnadhanamDetailsDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ABCAnadhanamDetailsDataSet.xsd</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Forms\ABCAnnadhanamReports.resx">
+      <DependentUpon>ABCAnnadhanamReports.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Configure.resx">
+      <DependentUpon>Configure.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Create.resx">
+      <DependentUpon>Create.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Availability.resx">
+      <DependentUpon>Availability.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Edit.resx">
+      <DependentUpon>Edit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\View.resx">
+      <DependentUpon>View.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="RDLC\ABCReceiptReport.rdlc" />
+    <EmbeddedResource Include="RDLC\ABCReportData.rdlc" />
+    <EmbeddedResource Include="Forms\Receipt.resx">
+      <DependentUpon>Receipt.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="ABCAnadhanamDetailsDataSet.xsc">
+      <DependentUpon>ABCAnadhanamDetailsDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="ABCAnadhanamDetailsDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ABCAnadhanamDetailsDataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="ABCAnadhanamDetailsDataSet.xss">
+      <DependentUpon>ABCAnadhanamDetailsDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="ABCAnnadhanamReportsDataset.xsc">
+      <DependentUpon>ABCAnnadhanamReportsDataset.xsd</DependentUpon>
+    </None>
+    <None Include="ABCAnnadhanamReportsDataset.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ABCAnnadhanamReportsDataset.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="ABCAnnadhanamReportsDataset.xss">
+      <DependentUpon>ABCAnnadhanamReportsDataset.xsd</DependentUpon>
+    </None>
+    <None Include="ABCReceiptDataset.xsc">
+      <DependentUpon>ABCReceiptDataset.xsd</DependentUpon>
+    </None>
+    <None Include="ABCReceiptDataset.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ABCReceiptDataset.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="ABCReceiptDataset.xss">
+      <DependentUpon>ABCReceiptDataset.xsd</DependentUpon>
+    </None>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\DataSources\AnnaBabaCharities.datasource" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <None Include="Resources\ABCAnadhanamDetailsDataSet.xsc">
+      <DependentUpon>ABCAnadhanamDetailsDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="Resources\ABCAnadhanamDetailsDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ABCAnadhanamDetailsDataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Resources\ABCAnadhanamDetailsDataSet.xss">
+      <DependentUpon>ABCAnadhanamDetailsDataSet.xsd</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.SQL.Server.Compact.3.5">
+      <Visible>False</Visible>
+      <ProductName>SQL Server Compact 3.5 SP2</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\ABC.ico" />
+    <Content Include="Resources\ABCAnadhanamDetails.sdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    if not exist "$(TargetDir)x86" md "$(TargetDir)x86"
+    xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\x86\*.*" "$(TargetDir)x86"
+    if not exist "$(TargetDir)amd64" md "$(TargetDir)amd64"
+    xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\amd64\*.*" "$(TargetDir)amd64"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

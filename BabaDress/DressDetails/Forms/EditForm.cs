@@ -206,6 +206,7 @@ namespace DressDetails.Forms
             DataGridTextBoxColumn devoteename = new DataGridTextBoxColumn();
             dgMonthdetails.Columns.Add("DEVOTEENAME", "Devotee Name");
             devoteename.TextBox.Name = "DEVOTEENAME";
+            devoteename.TextBox.CharacterCasing = CharacterCasing.Upper;
             devoteename.Alignment = HorizontalAlignment.Left;
 
             DataGridTextBoxColumn address = new DataGridTextBoxColumn();
@@ -374,7 +375,7 @@ namespace DressDetails.Forms
         {
             DateTime bookingDate = DateTime.Parse(date);
 
-            var strUpdateQuery = "UPDATE DRESSDETAILS Set DEVOTEENAME='" + devoteeName + "',Address='" + address.Trim() + "',ContactNumber='" + contactNumber + "',UpdatedBy='" + userId + "',UpdatedOn='" + DateTime.Now +
+            var strUpdateQuery = "UPDATE DRESSDETAILS Set DEVOTEENAME='" + devoteeName.ToUpper() + "',Address='" + address.Trim() + "',ContactNumber='" + contactNumber + "',UpdatedBy='" + userId + "',UpdatedOn='" + DateTime.Now +
                                 "' WHERE BOOKEDDATE='" + bookingDate + "'";
 
             if (string.IsNullOrWhiteSpace(devoteeName))

@@ -203,7 +203,8 @@ namespace DressDetails.Forms
             DataGridTextBoxColumn devoteename = new DataGridTextBoxColumn();
             dgMonthdetails.Columns.Add("DEVOTEENAME", "Devotee Name");
             devoteename.TextBox.Name = "DEVOTEENAME";
-            devoteename.Alignment = HorizontalAlignment.Left;
+            devoteename.TextBox.CharacterCasing = CharacterCasing.Upper;
+            devoteename.Alignment = HorizontalAlignment.Left;            
 
             DataGridTextBoxColumn address = new DataGridTextBoxColumn();
             dgMonthdetails.Columns.Add("ADDRESS", "Address");
@@ -334,7 +335,7 @@ namespace DressDetails.Forms
 
             SqlCommand cm = new SqlCommand(strInsertQuery, _con);
             cm.Parameters.AddWithValue("@BOOKEDDATE", bookingDate);
-            cm.Parameters.AddWithValue("@DEVOTEENAME", devoteeName);
+            cm.Parameters.AddWithValue("@DEVOTEENAME", devoteeName.ToUpper());
             cm.Parameters.AddWithValue("@ADDRESS", address);
             cm.Parameters.AddWithValue("@CONTACTNUMBER", contactNumber);
             cm.Parameters.AddWithValue("@BOOKEDMONTH", month);
