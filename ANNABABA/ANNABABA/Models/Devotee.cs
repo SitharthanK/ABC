@@ -8,7 +8,7 @@
     /// <summary>
     /// Defines the <see cref="Devotee" />.
     /// </summary>
-    internal class Devotee
+    public class Devotee
     {
         /// <summary>
         /// Gets or sets the ReceiptNumber.

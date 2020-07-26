@@ -1,26 +1,28 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
+using ANNABABA.Models;
 using Microsoft.Reporting.WinForms;
 
 namespace ANNABABA
 {
     public partial class Receipt : Form
     {
-        public Receipt(string strReceiptNumber, string strName, string strFullAddress, DateTime dtAnadhanamDate,
-                             string strChequeNumber, DateTime dtChequeDate, string strChequeDrawn, string strPaymentMode)
+        public Receipt(Devotee devotee)
         {
             InitializeComponent();
             MaximizeBox = false;
+           
+            string strFullAddress = devotee.Address + ", " + devotee.City + "," + devotee.State + "," + devotee.Country + ".";
 
             ReportParameter[] param = new ReportParameter[8];
-            param[0] = new ReportParameter("ReceiptNumber", strReceiptNumber);
+            param[0] = new ReportParameter("ReceiptNumber",Convert.ToString(devotee.ReceiptNumber));
             param[1] = new ReportParameter("Address", strFullAddress);
-            param[2] = new ReportParameter("AnnadhanamDate", dtAnadhanamDate.ToString("dd-MMM-yyyy"));
-            param[3] = new ReportParameter("ChequeNumber", (strPaymentMode == "Cash" ? "NIL" : strChequeNumber));
-            param[4] = new ReportParameter("ChequeDate", (strPaymentMode == "Cash" ? "NIL" : dtChequeDate.ToString("dd-MMM-yyyy")));
-            param[5] = new ReportParameter("ChequeDrawnOn", (strPaymentMode == "Cash" ? "NIL" : strChequeDrawn));
-            param[6] = new ReportParameter("NameOfDevotee", strName);
+            param[2] = new ReportParameter("AnnadhanamDate", devotee.AnadhanamDate.ToString("dd-MMM-yyyy"));
+            param[3] = new ReportParameter("ChequeNumber", (devotee.PaymentMode == PaymentMode.CASH ? "NIL" : devotee.ChequeNo));
+            param[4] = new ReportParameter("ChequeDate", (devotee.PaymentMode == PaymentMode.CASH ? "NIL" : devotee.ChequeDate.ToString("dd-MMM-yyyy")));
+            param[5] = new ReportParameter("ChequeDrawnOn", (devotee.PaymentMode == PaymentMode.CASH ? "NIL" : devotee.ChequeDrawn));
+            param[6] = new ReportParameter("NameOfDevotee", devotee.DevoteeName);
             param[7] = new ReportParameter("TodayDate", DateTime.Now.ToString("dd-MMM-yyyy"));
 
             this.ReceiptReportViewer.LocalReport.SetParameters(param);

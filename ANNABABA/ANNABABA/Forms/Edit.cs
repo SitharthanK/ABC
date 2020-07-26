@@ -40,7 +40,7 @@
 
         /// <summary>
         /// Gets or sets the lstStateList
-        /// Defines the StateList..........
+        /// Defines the StateList...........
         /// </summary>
         private static List<StateDetails> lstStateDetails { get; set; }
 
@@ -172,6 +172,7 @@
                 if (devotee?.ReceiptNumber != null)
                 {
                     {
+                        txtReceiptNumber.Text = Convert.ToString(devotee.ReceiptNumber);
                         txtName.Text = Convert.ToString(devotee.DevoteeName);
                         txtAddress.Text = Convert.ToString(devotee.Address);
                         txtMobileNumber.Text = Convert.ToString(devotee.ContactNumber);
@@ -242,11 +243,11 @@
             BookedCount = SqlHelper.GetAnnadhanamDayCountByDate(dtAnadhanamDate.Value.Date);
             TotalCount = SqlHelper.GetAnnadhanamTotalCountByDate(dtAnadhanamDate.Value.Date);
             if (BookedCount <= TotalCount)
-            {                
+            {
                 if (ValidateDevoteeDetails())
                 {
                     Devotee devotee = AssignDevoteeDetails();
-                    SqlHelper.CreateAnnadhanam(devotee);
+                    SqlHelper.UpdateAnnadhanam(devotee);
                     clear();
                 }
             }
@@ -256,6 +257,10 @@
             }
         }
 
+        /// <summary>
+        /// The ValidateDevoteeDetails.
+        /// </summary>
+        /// <returns>The <see cref="bool"/>.</returns>
         internal bool ValidateDevoteeDetails()
         {
             bool blnSubmit = true;
@@ -496,7 +501,7 @@
                 dtChequeDate.Enabled = true;
                 dtChequeDate.Value = DateTime.Now.Date;
             }
-        } 
+        }
 
         /// <summary>
         /// The LoadCountryDetails.
@@ -687,7 +692,6 @@
         }
     }
 
-    //COUNTRY
     /// <summary>
     /// Defines the <see cref="EditCountryDetails" />.
     /// </summary>
@@ -709,7 +713,6 @@
         public string isActive { get; set; }
     }
 
-    //STATE
     /// <summary>
     /// Defines the <see cref="EditStateDetails" />.
     /// </summary>
@@ -736,7 +739,6 @@
         public string isActive { get; set; }
     }
 
-    //CITY DETAILS
     /// <summary>
     /// Defines the <see cref="EditCityDetails" />.
     /// </summary>

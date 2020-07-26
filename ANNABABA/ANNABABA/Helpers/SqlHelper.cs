@@ -25,13 +25,13 @@
 
         /// <summary>
         /// Gets or sets the lstCountryList
-        /// Defines the CountryList.......
+        /// Defines the CountryList........
         /// </summary>
         private static List<CountryDetails> lstCountryDetails { get; set; }
 
         /// <summary>
         /// Gets or sets the lstStateList
-        /// Defines the StateList.......
+        /// Defines the StateList........
         /// </summary>
         private static List<StateDetails> lstStateDetails { get; set; }
 
@@ -95,8 +95,12 @@
             }
         }
 
+        /// <summary>
+        /// The AddConfiguration.
+        /// </summary>
+        /// <param name="configuration">The configuration<see cref="ConfigurationDetails"/>.</param>
         internal static void AddConfiguration(ConfigurationDetails configuration)
-        {           
+        {
             OpenSqlCeConnection();
             sqlQuery = "INSERT INTO configuration ([EffectiveDate],[NoOfReceipts],[NoOfMonths])VALUES(@EffectiveDate,@NoOfReceipts, @NoOfMonths)";
 
@@ -266,16 +270,13 @@
         /// </summary>
         /// <param name="devotee">The devotee<see cref="Devotee"/>.</param>
         internal static void CreateAnnadhanam(Devotee devotee)
-        {
-            string paymentMode = string.Empty;
+        {            
             if (devotee.PaymentMode == PaymentMode.CASH)
-            {
-                paymentMode = "CASH";
+            { 
                 sqlQuery = "INSERT INTO tblAnnadhanamDetails(ReceiptNumber,DevoteeName,Address,CountryCode,Country,StateCode,State,CityCode,City,Amount,ReceiptCreatedDate,AnadhanamDate,Mode,ContactNumber)VALUES(@ReceiptNumber,@DevoteeName, @Address,@CountryCode,@Country,@StateCode,@State,@CityCode,@City,@Amount,@ReceiptCreatedDate,@AnadhanamDate,@Mode,@ContactNumber)";
             }
             else
-            {
-                paymentMode = "CHEQUE";
+            {               
                 sqlQuery = "INSERT INTO tblAnnadhanamDetails(ReceiptNumber,DevoteeName,Address,CountryCode,Country,StateCode,State,CityCode,City,Amount,ReceiptCreatedDate,AnadhanamDate,ChequeNo,ChequeDate,ChequeDrawn,Mode,ContactNumber)VALUES(@ReceiptNumber,@DevoteeName, @Address,@CountryCode,@Country,@StateCode,@State,@CityCode,@City,@Amount,@ReceiptCreatedDate,@AnadhanamDate,@ChequeNo,@ChequeDate,@ChequeDrawn,@Mode,@ContactNumber)";
             }
 
@@ -301,11 +302,10 @@
             if (devotee.PaymentMode == PaymentMode.CHEQUE)
             {
                 cm.Parameters.AddWithValue("@ChequeNo", devotee.ContactNumber);
-                cm.Parameters.AddWithValue("@ChequeDate", devotee.ChequeDate.Date);
+                cm.Parameters.AddWithValue("@ChequeDate", devotee.ChequeDate);
                 cm.Parameters.AddWithValue("@ChequeDrawn", devotee.ChequeDrawn);
             }
-            string strFullAddress = devotee.Address + ", " + devotee.City + "," + devotee.State + "," + devotee.Country + ".";
-
+           
             try
             {
                 int intAffectedRow = cm.ExecuteNonQuery();
@@ -314,13 +314,58 @@
                 if (intAffectedRow > 0)
                 {
                     MessageBox.Show("Anadhanam Created Sucessfully", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    Receipt receiptForm = new Receipt(devotee.ReceiptNumber.ToString(), devotee.DevoteeName, strFullAddress, dtAnadhanamDates, devotee.ChequeNo, devotee.ChequeDate.Date, devotee.ChequeDrawn, paymentMode);
+                    Receipt receiptForm = new Receipt(devotee);
                     receiptForm.ShowDialog();
 
                 }
                 else
                 {
                     MessageBox.Show("Insertion Failed", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /// <param name="devotee">The devotee<see cref="Devotee"/>.</param>
+        /// <summary>
+        /// The UpdateAnnadhanam.
+        /// </summary>
+        /// <param name="devotee">The devotee<see cref="Devotee"/>.</param>
+        internal static void UpdateAnnadhanam(Devotee devotee)
+        {
+            DateTime dtAnadhanamDates = new DateTime(devotee.AnadhanamDate.Date.Year, devotee.AnadhanamDate.Date.Month, devotee.AnadhanamDate.Date.Day, 12, 0, 0);
+           
+            OpenSqlCeConnection();
+
+            string paymentMode = string.Empty;
+            if (devotee.PaymentMode == PaymentMode.CASH)
+            {
+                sqlQuery = "UPDATE tblAnnadhanamDetails Set DevoteeName='" + devotee.DevoteeName.Trim() + "',Address='" + devotee.Address + "',CountryCode=" + devotee.CountryCode + ",Country='" + devotee.Country + "',StateCode=" + devotee.StateCode + ",State='" + devotee.State + "',CityCode=" + devotee.CityCode + ",City='" + devotee.City + "',AnadhanamDate='" + dtAnadhanamDates.ToString("dd-MMM-yyyy HH:mm:ss") + "', Mode='" + devotee.PaymentMode + "',ContactNumber='" + devotee.ContactNumber + "' WHERE ReceiptNumber='" + devotee.ReceiptNumber.ToString() + "'";
+            }
+            else
+            {
+                sqlQuery = "UPDATE tblAnnadhanamDetails Set DevoteeName='" + devotee.DevoteeName.Trim() + "',Address='" + devotee.Address + "',CountryCode=" + devotee.CountryCode + ",Country='" + devotee.Country + "',StateCode=" + devotee.StateCode + ",State='" + devotee.State + "',CityCode=" + devotee.CityCode + ",City='" + devotee.City + "',AnadhanamDate='" + dtAnadhanamDates.ToString("dd-MMM-yyyy HH:mm:ss") + "',ChequeNo='" + devotee.ChequeNo + "',ChequeDate='" + devotee.ChequeDate + "',ChequeDrawn='" + devotee.ChequeDrawn + "',Mode='" + devotee.PaymentMode + "',ContactNumber='" + devotee.ContactNumber + "' WHERE ReceiptNumber='" + devotee.ReceiptNumber.ToString() + "'";
+            }
+
+            try
+            {
+                SqlCeCommand cm = new SqlCeCommand(sqlQuery, con);
+                int intAffectedRow = cm.ExecuteNonQuery();
+                con.Close();
+
+                if (intAffectedRow > 0)
+                {
+                    MessageBox.Show("Anadhanam Updated Sucessfully", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    Receipt receiptForm = new Receipt(devotee);
+                    receiptForm.ShowDialog();
+
+                }
+                else
+                {
+                    MessageBox.Show("Updation Failed", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)

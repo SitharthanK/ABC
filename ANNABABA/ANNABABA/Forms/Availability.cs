@@ -50,42 +50,18 @@
                 lstAvailability = SqlHelper.GetAnnadhanamAvailabilityDate(1);
 
                 button1.Text = lstAvailability.Where(n => n.annadhanamDate.Date == dtPeriodFrom.Date).Select(n => Convert.ToString(n.balanceReceiptCount)).FirstOrDefault();
-                button2.Text = lstAvailability.Where(n => n.annadhanamDate.Date.AddDays(1) == dtPeriodFrom.Date).Select(n => Convert.ToString(n.balanceReceiptCount)).FirstOrDefault();
-                button3.Text = lstAvailability.Where(n => n.annadhanamDate.Date.AddDays(2) == dtPeriodFrom.Date).Select(n => Convert.ToString(n.balanceReceiptCount)).FirstOrDefault();
-                button4.Text = lstAvailability.Where(n => n.annadhanamDate.Date.AddDays(3) == dtPeriodFrom.Date).Select(n => Convert.ToString(n.balanceReceiptCount)).FirstOrDefault();
-                button5.Text = lstAvailability.Where(n => n.annadhanamDate.Date.AddDays(4) == dtPeriodFrom.Date).Select(n => Convert.ToString(n.balanceReceiptCount)).FirstOrDefault();
-                button6.Text = lstAvailability.Where(n => n.annadhanamDate.Date.AddDays(5) == dtPeriodFrom.Date).Select(n => Convert.ToString(n.balanceReceiptCount)).FirstOrDefault();
-                button7.Text = lstAvailability.Where(n => n.annadhanamDate.Date.AddDays(6) == dtPeriodFrom.Date).Select(n => Convert.ToString(n.balanceReceiptCount)).FirstOrDefault();
+                button2.Text = lstAvailability.Where(n => n.annadhanamDate.Date == dtPeriodFrom.Date.AddDays(1)).Select(n => Convert.ToString(n.balanceReceiptCount)).FirstOrDefault();
+                button3.Text = lstAvailability.Where(n => n.annadhanamDate.Date == dtPeriodFrom.Date.AddDays(2)).Select(n => Convert.ToString(n.balanceReceiptCount)).FirstOrDefault();
+                button4.Text = lstAvailability.Where(n => n.annadhanamDate.Date == dtPeriodFrom.Date.AddDays(3)).Select(n => Convert.ToString(n.balanceReceiptCount)).FirstOrDefault();
+                button5.Text = lstAvailability.Where(n => n.annadhanamDate.Date == dtPeriodFrom.Date.AddDays(4)).Select(n => Convert.ToString(n.balanceReceiptCount)).FirstOrDefault();
+                button6.Text = lstAvailability.Where(n => n.annadhanamDate.Date == dtPeriodFrom.Date.AddDays(5)).Select(n => Convert.ToString(n.balanceReceiptCount)).FirstOrDefault();
+                button7.Text = lstAvailability.Where(n => n.annadhanamDate.Date == dtPeriodFrom.Date.AddDays(6)).Select(n => Convert.ToString(n.balanceReceiptCount)).FirstOrDefault();
             }
 
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-            }
         }
-    }
-
-    /// <summary>
-    /// Defines the <see cref="AvailabilityDetails" />.
-    /// </summary>
-    public class AvailabilityDetails
-    {
-        /// <summary>
-        /// Gets or sets the intCount.
-        /// </summary>
-        public int intCount { get; set; }
-
-        /// <summary>
-        /// Gets or sets the dtAnnadhanamDate.
-        /// </summary>
-        public string dtAnnadhanamDate { get; set; }
-
-        /// <summary>
-        /// Gets or sets the intBalanceCount.
-        /// </summary>
-        public int intBalanceCount { get; set; }
-    }
+    }    
 }
