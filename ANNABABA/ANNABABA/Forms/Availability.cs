@@ -47,7 +47,7 @@
                 label13.Text = dtPeriodFrom.AddDays(5).DayOfWeek.ToString();
                 label14.Text = dtPeriodFrom.AddDays(6).DayOfWeek.ToString();
 
-                lstAvailability = SqlHelper.GetAnnadhanamAvailabilityDate(1);
+                lstAvailability = SqlHelper.GetAnnadhanamAvailabilityByWeek(dtAnnadhanamDate);
 
                 button1.Text = lstAvailability.Where(n => n.annadhanamDate.Date == dtPeriodFrom.Date).Select(n => Convert.ToString(n.balanceReceiptCount)).FirstOrDefault();
                 button2.Text = lstAvailability.Where(n => n.annadhanamDate.Date == dtPeriodFrom.Date.AddDays(1)).Select(n => Convert.ToString(n.balanceReceiptCount)).FirstOrDefault();

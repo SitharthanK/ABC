@@ -429,6 +429,8 @@
             txtDrawnOn.Text = "";
 
             txtMobileNumber.Text = "";
+            lstConfiguration = SqlHelper.GetConfigurationDetails();
+            NoOfMonths = lstConfiguration.Where(x => x.effectiveDate <= DateTime.Now.Date).Select(x => x.NoOfMonths).FirstOrDefault();
             GetAnnadhanamAvailabilityDate();
             dtChequeDate.Value = DateTime.Now.Date;
             onPageload = false;
@@ -441,6 +443,7 @@
         {
             lstAvailability = SqlHelper.GetAnnadhanamAvailabilityDate(NoOfMonths);
             dtAnadhanamDate.MinDate = lstAvailability.Where(n => n.balanceReceiptCount > 0).Select(n => n.annadhanamDate.Date).FirstOrDefault();
+            dtAnadhanamDate.Value = lstAvailability.Where(n => n.balanceReceiptCount > 0).Select(n => n.annadhanamDate.Date).FirstOrDefault();
         }
 
         /// <summary>
@@ -453,7 +456,7 @@
 
             BookedCount = SqlHelper.GetAnnadhanamDayCountByDate(dtAnadhanamDate.Value.Date);
             TotalCount = SqlHelper.GetAnnadhanamTotalCountByDate(dtAnadhanamDate.Value.Date);
-            if (BookedCount <= TotalCount)
+            if (BookedCount<TotalCount)
             {
                
                 if (ValidateDevoteeDetails())
@@ -635,7 +638,10 @@
             txtDrawnOn.Text = "";
             txtMobileNumber.Text = "";
 
+            lstConfiguration = SqlHelper.GetConfigurationDetails();
+            NoOfMonths = lstConfiguration.Where(x => x.effectiveDate <= DateTime.Now.Date).Select(x => x.NoOfMonths).FirstOrDefault();
             GetAnnadhanamAvailabilityDate();
+
             dtChequeDate.Value = DateTime.Now.Date;
             onPageload = false;
         }

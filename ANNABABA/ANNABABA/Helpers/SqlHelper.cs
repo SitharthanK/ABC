@@ -25,13 +25,13 @@
 
         /// <summary>
         /// Gets or sets the lstCountryList
-        /// Defines the CountryList........
+        /// Defines the CountryList.........
         /// </summary>
         private static List<CountryDetails> lstCountryDetails { get; set; }
 
         /// <summary>
         /// Gets or sets the lstStateList
-        /// Defines the StateList........
+        /// Defines the StateList.........
         /// </summary>
         private static List<StateDetails> lstStateDetails { get; set; }
 
@@ -41,14 +41,14 @@
         private static List<CityDetails> lstCityDetails { get; set; }
 
         /// <summary>
-        /// Gets or sets the lstDevoteeDetails.
-        /// </summary>
-        private static List<Devotee> lstDevoteeDetails { get; set; }
-
-        /// <summary>
         /// Gets or sets the lstAvailability.
         /// </summary>
         private static List<Availability> lstAvailability { get; set; }
+
+        /// <summary>
+        /// Gets or sets the lstAvailabilityByWeek.
+        /// </summary>
+        private static List<Availability> lstAvailabilityByWeek { get; set; }
 
         /// <summary>
         /// Gets or sets the lstConfiguration.
@@ -270,13 +270,13 @@
         /// </summary>
         /// <param name="devotee">The devotee<see cref="Devotee"/>.</param>
         internal static void CreateAnnadhanam(Devotee devotee)
-        {            
+        {
             if (devotee.PaymentMode == PaymentMode.CASH)
-            { 
+            {
                 sqlQuery = "INSERT INTO tblAnnadhanamDetails(ReceiptNumber,DevoteeName,Address,CountryCode,Country,StateCode,State,CityCode,City,Amount,ReceiptCreatedDate,AnadhanamDate,Mode,ContactNumber)VALUES(@ReceiptNumber,@DevoteeName, @Address,@CountryCode,@Country,@StateCode,@State,@CityCode,@City,@Amount,@ReceiptCreatedDate,@AnadhanamDate,@Mode,@ContactNumber)";
             }
             else
-            {               
+            {
                 sqlQuery = "INSERT INTO tblAnnadhanamDetails(ReceiptNumber,DevoteeName,Address,CountryCode,Country,StateCode,State,CityCode,City,Amount,ReceiptCreatedDate,AnadhanamDate,ChequeNo,ChequeDate,ChequeDrawn,Mode,ContactNumber)VALUES(@ReceiptNumber,@DevoteeName, @Address,@CountryCode,@Country,@StateCode,@State,@CityCode,@City,@Amount,@ReceiptCreatedDate,@AnadhanamDate,@ChequeNo,@ChequeDate,@ChequeDrawn,@Mode,@ContactNumber)";
             }
 
@@ -305,7 +305,7 @@
                 cm.Parameters.AddWithValue("@ChequeDate", devotee.ChequeDate);
                 cm.Parameters.AddWithValue("@ChequeDrawn", devotee.ChequeDrawn);
             }
-           
+
             try
             {
                 int intAffectedRow = cm.ExecuteNonQuery();
@@ -329,7 +329,6 @@
             }
         }
 
-        /// <param name="devotee">The devotee<see cref="Devotee"/>.</param>
         /// <summary>
         /// The UpdateAnnadhanam.
         /// </summary>
@@ -337,7 +336,7 @@
         internal static void UpdateAnnadhanam(Devotee devotee)
         {
             DateTime dtAnadhanamDates = new DateTime(devotee.AnadhanamDate.Date.Year, devotee.AnadhanamDate.Date.Month, devotee.AnadhanamDate.Date.Day, 12, 0, 0);
-           
+
             OpenSqlCeConnection();
 
             string paymentMode = string.Empty;
@@ -669,6 +668,81 @@
         }
 
         /// <summary>
+        /// The GetAnnadhanamAvailabilityDate.
+        /// </summary>
+        /// <param name="dtAnnadhanamDate">The dtAnnadhanamDate<see cref="DateTime"/>.</param>
+        /// <returns>The <see cref="List{Availability}"/>.</returns>
+        internal static List<Availability> GetAnnadhanamAvailabilityByWeek(DateTime dtAnnadhanamDate)
+        {
+            lstAvailabilityByWeek = new List<Availability>();
+
+            DateTime PeriodFrom = new DateTime(dtAnnadhanamDate.Year, dtAnnadhanamDate.Month, dtAnnadhanamDate.Day, 0, 0, 0);
+            DateTime PeriodTo = new DateTime(dtAnnadhanamDate.Date.AddDays(7).Year, dtAnnadhanamDate.Date.AddDays(7).Month, dtAnnadhanamDate.Date.AddDays(7).Day, 23, 59, 59);
+
+            for (DateTime dt = PeriodFrom; dt <= PeriodTo; dt = dt.AddDays(1))
+            {
+                lstAvailabilityByWeek.Add(new Availability { annadhanamDate = dt.Date, bookedReceiptCount = 0 });
+            }
+
+            try
+            {
+
+                OpenSqlCeConnection();
+                string strSelectQuery = "SELECT AnadhanamDate,COALESCE(COUNT(ReceiptNumber),0)  FROM tblAnnadhanamDetails WHERE AnadhanamDate>='" + PeriodFrom.ToString("dd-MMM-yyyy") + "' AND AnadhanamDate <='" + PeriodTo.ToString("dd-MMM-yyyy") + "' GROUP BY AnadhanamDate ORDER BY AnadhanamDate ASC";
+                SqlCeCommand cm = new SqlCeCommand(strSelectQuery, con)
+                {
+                    CommandText = strSelectQuery,
+                    CommandType = CommandType.Text,
+                    Connection = con
+                };
+
+                var dataReader = cm.ExecuteReader();
+                var dataTable = new DataTable();
+                dataTable.Load(dataReader);
+
+                if (dataTable != null && dataTable.Rows.Count > 0)
+                {
+                    List<ConfigurationDetails> configurationDetails = new List<ConfigurationDetails>();
+                    configurationDetails = SqlHelper.GetConfigurationDetails();
+
+                    foreach (DataRow dr in dataTable.Rows)
+                    {
+                        foreach (Availability avail in lstAvailabilityByWeek.Where(n => n.annadhanamDate.Date == Convert.ToDateTime(dr.ItemArray[0]).Date))
+                        {
+                            avail.bookedReceiptCount = Convert.ToInt32(dr.ItemArray[1]);
+                        }
+                    }
+
+                    foreach (Availability avail in lstAvailabilityByWeek)
+                    {
+                        ConfigurationDetails config = configurationDetails
+                            .OrderByDescending(n => n.effectiveDate)
+                            .Where(n => n.effectiveDate.Date <= avail.annadhanamDate.Date)
+                            .FirstOrDefault();
+
+                        avail.totalReceiptCount = config.TotalNoOfReceipts;
+                        avail.balanceReceiptCount = (config.TotalNoOfReceipts - avail.bookedReceiptCount);
+                    }
+                }
+
+                con.Close();
+            }
+            catch (SqlCeException ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.ExitThread();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+            }
+            return lstAvailabilityByWeek;
+        }
+
+        /// <summary>
         /// The GetAnnadhanamCountDetails.
         /// </summary>
         /// <returns>The <see cref="int"/>.</returns>
@@ -719,6 +793,57 @@
                 MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             return lstConfiguration;
+        }
+
+        /// <summary>
+        /// The GetAnnadhanamAvailabilityDate.
+        /// </summary>
+        /// <param name="dtAnnadhanamDate">The dtAnnadhanamDate<see cref="DateTime"/>.</param>
+        /// <returns>The <see cref="List{Availability}"/>.</returns>
+        internal static List<Devotee> GetListOfReceiptNumberbyAnnaDhanamDate(DateTime dtAnnadhanamDate)
+        {
+            List<Devotee> lstReceiptNumber = new List<Devotee>();
+            DateTime PeriodFrom = new DateTime(dtAnnadhanamDate.Date.Year, dtAnnadhanamDate.Date.Month, dtAnnadhanamDate.Date.Day, 1, 0, 0);
+            DateTime PeriodTo = new DateTime(dtAnnadhanamDate.Date.Year, dtAnnadhanamDate.Date.Month, dtAnnadhanamDate.Date.Day, 23, 59, 59);
+
+            try
+            {
+
+                OpenSqlCeConnection();
+                string strSelectQuery = "SELECT COALESCE(ReceiptNumber,0)  FROM tblAnnadhanamDetails WHERE AnadhanamDate>='" + PeriodFrom.ToString() + "' AND AnadhanamDate <='" + PeriodTo.ToString() + "' ORDER BY ReceiptNumber ASC";
+                SqlCeCommand cm = new SqlCeCommand(strSelectQuery, con)
+                {
+                    CommandText = strSelectQuery,
+                    CommandType = CommandType.Text,
+                    Connection = con
+                };
+
+                var dataReader = cm.ExecuteReader();
+                var dataTable = new DataTable();
+                dataTable.Load(dataReader);
+
+                if (dataTable != null && dataTable.Rows.Count > 0)
+                {
+                    foreach (DataRow dr in dataTable.Rows)
+                    {
+                        lstReceiptNumber.Add(new Devotee { ReceiptNumber = Convert.ToInt32(dr.ItemArray[0]) });
+                    }
+                }
+                con.Close();
+            }
+            catch (SqlCeException ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.ExitThread();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+            }
+            return lstReceiptNumber;
         }
     }
 }

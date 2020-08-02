@@ -76,12 +76,10 @@
         {
             onPageload = true;
             MaximizeBox = false;
+
             InitializeComponent();
-
             StartTimer();
-
             LoadCountryDetails();
-
             PaymentModeDetails();
 
             dtAnadhanamDate.Format = DateTimePickerFormat.Custom;
@@ -240,9 +238,20 @@
         /// <param name="e">The e<see cref="EventArgs"/>.</param>
         private void btnUpdate_Click(object sender, EventArgs e)
         {
+            List<Devotee> lstReceiptNumber = new List<Devotee>();
+            lstReceiptNumber = SqlHelper.GetListOfReceiptNumberbyAnnaDhanamDate(dtAnadhanamDate.Value.Date);
             BookedCount = SqlHelper.GetAnnadhanamDayCountByDate(dtAnadhanamDate.Value.Date);
             TotalCount = SqlHelper.GetAnnadhanamTotalCountByDate(dtAnadhanamDate.Value.Date);
-            if (BookedCount <= TotalCount)
+            if (BookedCount < TotalCount)
+            {
+                if (ValidateDevoteeDetails())
+                {
+                    Devotee devotee = AssignDevoteeDetails();
+                    SqlHelper.UpdateAnnadhanam(devotee);
+                    clear();
+                }
+            }
+            else if (lstReceiptNumber?.Count > 0 && lstReceiptNumber.Exists(item => item.ReceiptNumber == Convert.ToInt32(txtReceiptNumber.Text)))
             {
                 if (ValidateDevoteeDetails())
                 {
@@ -417,8 +426,10 @@
         private void clear()
         {
             this.txtReceiptNumber.Enabled = false;
+
             onPageload = true;
             LoadCountryDetails();
+
             txtAddress.Text = "";
             txtName.Text = "";
             txtChequeNumber.Text = "";
@@ -427,8 +438,12 @@
             txtMobileNumber.Text = "";
             txtReceiptNumber.Text = "";
             txtReceiptNumber.Enabled = true;
-            dtAnadhanamDate.Value = DateTime.Now.AddMonths(4).Date;
-            dtChequeDate.Value = DateTime.Now.Date;
+
+            dtAnadhanamDate.MinDate = DateTime.Now.AddYears(-1).Date;
+            dtAnadhanamDate.MaxDate = DateTime.Now.AddMonths(4).Date;
+            dtAnadhanamDate.Value = DateTime.Now.Date;
+            dtChequeDate.MaxDate = DateTime.Now.Date;
+
             onPageload = false;
         }
 
@@ -448,12 +463,14 @@
             txtName.Text = "";
             txtChequeNumber.Text = "";
             txtDrawnOn.Text = "";
-
-
             txtMobileNumber.Text = "";
             txtReceiptNumber.Text = "";
-            dtAnadhanamDate.Value = DateTime.Now.AddMonths(4).Date;
-            dtChequeDate.Value = DateTime.Now.Date;
+
+            dtAnadhanamDate.MinDate = DateTime.Now.AddYears(-1).Date;
+            dtAnadhanamDate.MaxDate = DateTime.Now.AddMonths(4).Date;
+            dtAnadhanamDate.Value = DateTime.Now.Date;
+            dtChequeDate.MaxDate = DateTime.Now.Date;
+
             onPageload = false;
         }
 

@@ -6,6 +6,7 @@
     using System.Collections.Generic;
     using System.Configuration;
     using System.Drawing;
+    using System.Linq;
     using System.Windows.Forms;
 
     /// <summary>
@@ -29,13 +30,15 @@
         public Configure()
         {
             InitializeComponent();
+            InitializeDataGridView();
+            
             dtEffectiveDate.MinDate = DateTime.Now.Date;
             dtEffectiveDate.MaxDate = DateTime.Now.AddYears(1);
             dtEffectiveDate.Value = DateTime.Now.Date;
+            
             nmcReceipts.Value = 5;
             nmcMonths.Value = 4;
-            txtPassword.Text = Convert.ToString(ConfigurationManager.AppSettings["Password"]);
-
+            
             LoadConfigurationDetails();
         }
 
@@ -44,35 +47,22 @@
         /// </summary>
         private void LoadConfigurationDetails()
         {
-            lstConfiguration = SqlHelper.GetConfigurationDetails();
+            lstConfiguration = SqlHelper.GetConfigurationDetails();   
 
             if (lstConfiguration?.Count > 0)
-            {
-                dgvConfigurationDetails.Rows.Clear();
-                dgvConfigurationDetails.ColumnCount = 3;
-                dgvConfigurationDetails.Columns[0].Name = "Effective Date";
-                dgvConfigurationDetails.Columns[0].Width = 200;
-
-                dgvConfigurationDetails.Columns[1].Name = "Total No.of receipts";
-                dgvConfigurationDetails.Columns[1].Width = 200;
-
-                dgvConfigurationDetails.Columns[2].Name = "No.of months booking in advance";
-                dgvConfigurationDetails.Columns[2].Width = 250;
-                                
+            { 
                 foreach (ConfigurationDetails config in lstConfiguration)
                 {
                     string[] row = new string[]
                     {
-                        config.effectiveDate.ToString("dd-MMM-yyyy"),
+                        config.effectiveDate.ToString("dd-MMM-yyyy").ToUpper(),
                         config.TotalNoOfReceipts.ToString(),
                         config.NoOfMonths.ToString()
                     };
-                    dgvConfigurationDetails.Rows.Add(row);
+                    dgvConfigurationDetails.Rows.Add(row);                    
                 }
 
-                dgvConfigurationDetails.Enabled = false;
-                dgvConfigurationDetails.ForeColor = Color.Black;
-                dgvConfigurationDetails.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                dgvConfigurationDetails.Enabled = false;              
                 dgvConfigurationDetails.Refresh();
             }
             else
@@ -114,6 +104,10 @@
             {
                 MessageBox.Show("Min No.of Months for booking annadhanam should be greater than or equal to 3.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            else if (lstConfiguration.Any(n => n.effectiveDate.Date == dtEffectiveDate.Value.Date))
+            {
+                MessageBox.Show("Record already exists in out database. Please choose another date !..", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             else
             {
                 SqlHelper.AddConfiguration(configurationDetails);
@@ -127,6 +121,58 @@
 
                 LoadConfigurationDetails();
             }
+        }
+
+        private void InitializeDataGridView()
+        {
+            // Initialize basic DataGridView properties.
+            dgvConfigurationDetails.Dock = DockStyle.Fill;
+            dgvConfigurationDetails.BackgroundColor = Color.White;
+
+            // Set property values appropriate for read-only display and 
+            // limited interactivity. 
+            dgvConfigurationDetails.AllowUserToAddRows = false;
+            dgvConfigurationDetails.AllowUserToDeleteRows = false;
+            dgvConfigurationDetails.AllowUserToOrderColumns = true;
+            dgvConfigurationDetails.ReadOnly = true;
+            dgvConfigurationDetails.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvConfigurationDetails.MultiSelect = false;
+            dgvConfigurationDetails.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None;
+            dgvConfigurationDetails.AllowUserToResizeColumns = false;
+            dgvConfigurationDetails.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            dgvConfigurationDetails.AllowUserToResizeRows = false;
+            dgvConfigurationDetails.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+
+                   
+            // Set the background color for all rows and for alternating rows. 
+            // The value for alternating rows overrides the value for all rows. 
+            dgvConfigurationDetails.RowsDefaultCellStyle.BackColor = Color.LightYellow;
+            dgvConfigurationDetails.AlternatingRowsDefaultCellStyle.BackColor = Color.LightSkyBlue;
+
+            // Set the row and column header styles.
+            dgvConfigurationDetails.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dgvConfigurationDetails.ColumnHeadersDefaultCellStyle.BackColor = Color.Black;
+            dgvConfigurationDetails.RowHeadersDefaultCellStyle.BackColor = Color.Maroon;
+
+            dgvConfigurationDetails.Rows.Clear();
+            dgvConfigurationDetails.ColumnCount = 3;
+            dgvConfigurationDetails.Columns[0].Name = "Effective Date";
+            dgvConfigurationDetails.Columns[0].Width = 160;
+            dgvConfigurationDetails.Columns[0].HeaderCell.Style.ForeColor = Color.Black;
+            dgvConfigurationDetails.Columns[0].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvConfigurationDetails.Columns[0].CellTemplate.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+            dgvConfigurationDetails.Columns[1].Name = "Total No.Of Receipts / Day";
+            dgvConfigurationDetails.Columns[1].Width = 160;
+            dgvConfigurationDetails.Columns[0].HeaderCell.Style.ForeColor = Color.Black;
+            dgvConfigurationDetails.Columns[1].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvConfigurationDetails.Columns[1].CellTemplate.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+            dgvConfigurationDetails.Columns[2].Name = "No Of Months Booking In Advance";
+            dgvConfigurationDetails.Columns[2].Width = 290;
+            dgvConfigurationDetails.Columns[0].HeaderCell.Style.ForeColor = Color.Black;
+            dgvConfigurationDetails.Columns[2].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvConfigurationDetails.Columns[2].CellTemplate.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
         }
     }
 }
