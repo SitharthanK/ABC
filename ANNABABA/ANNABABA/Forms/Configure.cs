@@ -50,7 +50,9 @@
             lstConfiguration = SqlHelper.GetConfigurationDetails();   
 
             if (lstConfiguration?.Count > 0)
-            { 
+            {
+                dgvConfigurationDetails.Rows.Clear();
+
                 foreach (ConfigurationDetails config in lstConfiguration)
                 {
                     string[] row = new string[]
