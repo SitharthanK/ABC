@@ -1,36 +1,64 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Data.SqlClient;
-using System.Globalization;
-using System.Linq;
-using System.Windows.Forms;
-
-namespace DressDetails.Forms
+﻿namespace DressDetails.Forms
 {
+    using DressDetails.Helper;
+    using DressDetails.Models;
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Data.SqlClient;
+    using System.Globalization;
+    using System.Linq;
+    using System.Windows.Forms;
+
+    /// <summary>
+    /// Defines the <see cref="ProfileForm" />.
+    /// </summary>
     public partial class ProfileForm : Form
     {
-        Timer _timer;
-        public SqlConnection Con { get; private set; }
+        /// <summary>
+        /// Defines the _timer.
+        /// </summary>
+        internal Timer _timer;
+        private bool blnDataGridCreations;
+
+        /// <summary>
+        /// Defines the _userName.
+        /// </summary>
         private readonly string _userName;
+
+        /// <summary>
+        /// Defines the userId, isAdmin.....
+        /// </summary>
         public readonly int userId, isAdmin;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProfileForm"/> class.
+        /// </summary>
+        /// <param name="id">The id<see cref="int"/>.</param>
+        /// <param name="name">The name<see cref="string"/>.</param>
+        /// <param name="admin">The admin<see cref="int"/>.</param>
         public ProfileForm(int id, string name, int admin)
         {
-            InitializeComponent();
-            LoadGridDetails();
+            InitializeComponent();           
             IsAdminListDetails();
             IsActiveDetails();
             StartTimer();
+            blnDataGridCreations = false;
+            DataGridCreation();
 
             userId = id; _userName = name; isAdmin = admin;
             lblLoginName.Text = @"Welcome.: " + _userName;
 
             if (isAdmin == 1)
                 AddMenuAndItems();
-        }
-        #region MENU DETAILS
 
+            DataTable dataTable = SqlHelper.LoadProfileDetails();
+            LoadGridDetails(dataTable);
+        }
+
+        /// <summary>
+        /// The AddMenuAndItems.
+        /// </summary>
         private void AddMenuAndItems()
         {
             Menu = new MainMenu();
@@ -50,12 +78,24 @@ namespace DressDetails.Forms
             Menu.MenuItems.Add(oEdit);
             oEdit.MenuItems.Add("Edit", Update_Click);
         }
+
+        /// <summary>
+        /// The Create_Click.
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/>.</param>
+        /// <param name="e">The e<see cref="EventArgs"/>.</param>
         private void Create_Click(object sender, EventArgs e)
         {
             CreateForm obj = new CreateForm(userId, _userName, isAdmin);
             Hide();
             obj.ShowDialog();
         }
+
+        /// <summary>
+        /// The Update_Click.
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/>.</param>
+        /// <param name="e">The e<see cref="EventArgs"/>.</param>
         private void Update_Click(object sender, EventArgs e)
         {
             EditForm obj = new EditForm(userId, _userName, isAdmin);
@@ -63,15 +103,19 @@ namespace DressDetails.Forms
             obj.ShowDialog();
         }
 
+        /// <summary>
+        /// The ExitApplication_click.
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/>.</param>
+        /// <param name="e">The e<see cref="EventArgs"/>.</param>
         private void ExitApplication_click(object sender, EventArgs e)
         {
             Application.Exit();
         }
 
-        #endregion
-
-        #region TIMER VALIDATIONS
-
+        /// <summary>
+        /// The StartTimer.
+        /// </summary>
         private void StartTimer()
         {
             _timer = new Timer { Interval = 1000 };
@@ -79,20 +123,28 @@ namespace DressDetails.Forms
             _timer.Enabled = true;
         }
 
-        void tmr_Tick(object sender, EventArgs e)
+        /// <summary>
+        /// The tmr_Tick.
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/>.</param>
+        /// <param name="e">The e<see cref="EventArgs"/>.</param>
+        internal void tmr_Tick(object sender, EventArgs e)
         {
             lblDateValue.Text = DateTime.Now.ToString(CultureInfo.CurrentCulture);
         }
-        #endregion
 
-        #region ACTIVE & ADMIN MODE
-
+        /// <summary>
+        /// Defines the ActiveList.
+        /// </summary>
         private static readonly Dictionary<int, string> ActiveList = new Dictionary<int, string>()
         {
             {0, "Inactive"},
             {1, "Active"},
         };
 
+        /// <summary>
+        /// The IsActiveDetails.
+        /// </summary>
         private void IsActiveDetails()
         {
             cmbIsActive.DataSource = new BindingSource(ActiveList, null);
@@ -101,13 +153,19 @@ namespace DressDetails.Forms
             cmbIsActive.SelectedValue = 1;
         }
 
+        /// <summary>
+        /// Defines the AdminList.
+        /// </summary>
         private static readonly Dictionary<int, string> AdminList = new Dictionary<int, string>()
         {
             {0, "No"},
             {1, "Yes"},
-            
+
         };
 
+        /// <summary>
+        /// The IsAdminListDetails.
+        /// </summary>
         private void IsAdminListDetails()
         {
             cmbIsAdmin.DataSource = new BindingSource(AdminList, null);
@@ -116,61 +174,11 @@ namespace DressDetails.Forms
             cmbIsAdmin.SelectedValue = 0;
         }
 
-        #endregion
-
-        #region LOAD GRID DETAILS
-
-        private void LoadGridDetails()
-        {
-            try
-            {
-                string conn = ConfigurationManager.ConnectionStrings["Conn"].ToString();
-                Con = new SqlConnection(conn);
-                Con.Open();
-
-                string strQuery = @"SELECT Id,Name,Address,UserName,ContactNumber,ISAdmin,ISActive FROM LOGINDETAILS";
-                SqlCommand cm = new SqlCommand(strQuery, Con)
-                {
-                    CommandText = strQuery,
-                    CommandType = CommandType.Text,
-                    Connection = Con
-                };
-                var dataReader = cm.ExecuteReader();
-                DataTable dataTable = new DataTable();
-                dataTable.Load(dataReader);
-                if (dataTable.Rows.Count > 0)
-                {
-                    var table = (from DataRow dr in dataTable.Rows
-                                 select new LoginDetails()
-                                 {
-                                     Id = Convert.ToInt32(dr["Id"]),
-                                     Name = Convert.ToString(dr["Name"]),
-                                     Address = Convert.ToString(dr["Address"]),
-                                     UserName = Convert.ToString(dr["UserName"]),
-                                     ContactNumber = Convert.ToString(dr["ContactNumber"]),
-                                     IsAdmin = Convert.ToBoolean(dr["ISAdmin"]) ? "Yes" : "No",
-                                     IsActive = Convert.ToBoolean(dr["IsActive"]) ? "Yes" : "No"
-                                 });
-                    dgLogindetails.DataSource = table.ToList();
-                }
-                else
-                    dgLogindetails.DataSource = dataTable;
-                Con.Close();
-            }
-            catch (SqlException ex)
-            {
-                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        #endregion
-
-        #region Button Click Events
-
+        /// <summary>
+        /// The btnCreate_Click.
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/>.</param>
+        /// <param name="e">The e<see cref="EventArgs"/>.</param>
         private void btnCreate_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtName.Text))
@@ -200,33 +208,19 @@ namespace DressDetails.Forms
             }
             else
             {
-                string strInsertQuery = "INSERT INTO LOGINDETAILS(NAME,ADDRESS,USERNAME,PASSWORD,CONTACTNUMBER,ISADMIN,ISACTIVE,INSERTEDBY)VALUES(@NAME,@ADDRESS,@USERNAME,@PASSWORD,@CONTACTNUMBER,@ISADMIN,@ISACTIVE,@INSERTEDBY)";
-                string conn = ConfigurationManager.ConnectionStrings["Conn"].ToString();
-                Con = new SqlConnection(conn);
-                Con.Open();
-
-                SqlCommand cm = new SqlCommand(strInsertQuery, Con);
-                cm.Parameters.AddWithValue("@NAME", txtName.Text);
-                cm.Parameters.AddWithValue("@ADDRESS", txtAddress.Text);
-                cm.Parameters.AddWithValue("@USERNAME", txtUsername.Text);
-                cm.Parameters.AddWithValue("@PASSWORD", txtPassword.Text);
-                cm.Parameters.AddWithValue("@CONTACTNUMBER", txtMobileNumber.Text);
-                cm.Parameters.AddWithValue("@ISADMIN", cmbIsAdmin.SelectedValue);
-                cm.Parameters.AddWithValue("@ISACTIVE", cmbIsActive.SelectedValue);
-                cm.Parameters.AddWithValue("@INSERTEDBY", userId.ToString());
                 try
                 {
-                    int intAffectedRow = cm.ExecuteNonQuery();
-                    if (intAffectedRow > 0)
+                    LoginDetails loginDetails = AssignValues();
+                    if (SqlHelper.AddProfile(loginDetails))
                     {
                         MessageBox.Show(@"User Added Sucessfully", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        LoadGridDetails();
+
+                        LoadGridDetails(SqlHelper.LoadProfileDetails());
                     }
                     else
                     {
                         MessageBox.Show(@"Adding User Failed", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-                    Con.Close();
                 }
                 catch (Exception ex)
                 {
@@ -235,6 +229,114 @@ namespace DressDetails.Forms
             }
         }
 
+        /// <summary>
+        /// The AssignValues.
+        /// </summary>
+        /// <returns>The <see cref="LoginDetails"/>.</returns>
+        private LoginDetails AssignValues()
+        {
+            LoginDetails loginDetails = new LoginDetails();
+            loginDetails.Name = txtName.Text;
+            loginDetails.Address = txtAddress.Text;
+            loginDetails.UserName = txtUsername.Text;
+            loginDetails.Password = txtPassword.Text;
+            loginDetails.Id = (!string.IsNullOrWhiteSpace(txtID.Text) ? Convert.ToInt32(txtID.Text) : 0);
+            loginDetails.ContactNumber = txtMobileNumber.Text;
+            loginDetails.IsActiveUser = Convert.ToBoolean(cmbIsActive.SelectedValue);
+            loginDetails.IsAdminUser = Convert.ToBoolean(cmbIsAdmin.SelectedValue);
+            loginDetails.UserId = Convert.ToString(userId);
+            return loginDetails;
+        }
+
+        /// <summary>
+        /// The LoadGridDetails.
+        /// </summary>
+        /// <param name="dt">The dt<see cref="DataTable"/>.</param>
+        private void LoadGridDetails(DataTable dt)
+        {
+            DataGridCreation();
+            dgLogindetails.Rows.Clear();
+            if (dt?.Rows?.Count > 0)
+            {
+                foreach (DataRow dr in dt.Rows)
+                {
+                    dgLogindetails.Rows.Add(dr["Id"].ToString(), dr["Name"].ToString(), dr["Address"].ToString(), dr["UserName"].ToString(), 
+                        dr["ContactNumber"].ToString(),(Convert.ToBoolean(dr["ISAdmin"]) ? "Yes" : "No"),(Convert.ToBoolean(dr["IsActive"]) ? "Yes" : "No"));
+                }
+                dgLogindetails.Refresh();
+            }
+            dgLogindetails.Refresh();
+        }
+
+        /// <summary>
+        /// The DataGridCreation.
+        /// </summary>
+        private void DataGridCreation()
+        {
+            if (!blnDataGridCreations)
+            {
+                DataGridTextBoxColumn serlNo = new DataGridTextBoxColumn();
+                dgLogindetails.Columns.Add("Id", "Id.");
+                serlNo.TextBox.Name = "Id";
+                serlNo.Alignment = HorizontalAlignment.Center;
+
+                DataGridTextBoxColumn devoteename = new DataGridTextBoxColumn();
+                dgLogindetails.Columns.Add("Name", "Name");
+                devoteename.TextBox.Name = "Name";
+                devoteename.TextBox.CharacterCasing = CharacterCasing.Upper;
+                devoteename.Alignment = HorizontalAlignment.Left;
+
+                DataGridTextBoxColumn address = new DataGridTextBoxColumn();
+                dgLogindetails.Columns.Add("Address", "Address");
+                address.TextBox.Name = "Address";
+                address.Alignment = HorizontalAlignment.Left;
+
+                DataGridTextBoxColumn UserName = new DataGridTextBoxColumn();
+                dgLogindetails.Columns.Add("UserName", "User Name");
+                UserName.TextBox.Name = "UserName";
+                UserName.Alignment = HorizontalAlignment.Left;
+
+                DataGridTextBoxColumn contactNumber = new DataGridTextBoxColumn();
+                dgLogindetails.Columns.Add("ContactNumber", "Contact Number");
+                contactNumber.TextBox.Name = "ContactNumber";
+                contactNumber.Alignment = HorizontalAlignment.Right;
+
+                DataGridTextBoxColumn ISAdmin = new DataGridTextBoxColumn();
+                dgLogindetails.Columns.Add("ISAdmin", "Is Admin User");
+                ISAdmin.TextBox.Name = "ISAdmin";
+                ISAdmin.Alignment = HorizontalAlignment.Left;
+
+                DataGridTextBoxColumn IsActive = new DataGridTextBoxColumn();
+                dgLogindetails.Columns.Add("IsActive", "Is Active User");
+                IsActive.TextBox.Name = "IsActive";
+                IsActive.Alignment = HorizontalAlignment.Left;
+
+                dgLogindetails.Columns[0].Width = 50;
+                dgLogindetails.Columns[1].Width = 120;
+                dgLogindetails.Columns[2].Width = 100;
+                dgLogindetails.Columns[3].Width = 140;
+                dgLogindetails.Columns[4].Width = 250;
+                dgLogindetails.Columns[5].Width = 150;
+                dgLogindetails.Columns[6].Width = 150;
+
+                dgLogindetails.Columns["Id"].ReadOnly = true;
+                dgLogindetails.Columns["Name"].ReadOnly = true;
+                dgLogindetails.Columns["Address"].ReadOnly = true;
+                dgLogindetails.Columns["UserName"].ReadOnly = true;
+                dgLogindetails.Columns["ContactNumber"].ReadOnly = true;
+                dgLogindetails.Columns["ISAdmin"].ReadOnly = true;
+                dgLogindetails.Columns["IsActive"].ReadOnly = true;
+                blnDataGridCreations = true;
+            }
+            dgLogindetails.Rows.Clear();
+            dgLogindetails.Refresh();
+        }
+
+        /// <summary>
+        /// The btnUpdate_Click.
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/>.</param>
+        /// <param name="e">The e<see cref="EventArgs"/>.</param>
         private void btnUpdate_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtName.Text))
@@ -264,40 +366,31 @@ namespace DressDetails.Forms
             }
             else
             {
-                var strUpdateQuery = "UPDATE LoginDETAILS Set ADDRESS='" + txtAddress.Text + "',Password='" +
-                                     txtPassword.Text + "',ContactNumber='" + txtMobileNumber.Text +
-                                     "',IsActive=" + cmbIsActive.SelectedValue + ",IsAdmin=" +
-                                     cmbIsAdmin.SelectedValue +
-                                     "WHERE ID='" + txtID.Text + "'";
-                string conn = ConfigurationManager.ConnectionStrings["Conn"].ToString();
-                Con = new SqlConnection(conn);
-                Con.Open();
-
-                var cm = new SqlCommand(strUpdateQuery, Con);
                 try
                 {
-                    var intAffectedRow = cm.ExecuteNonQuery();
-                    if (intAffectedRow > 0)
+                    LoginDetails loginDetails = AssignValues();
+                    if (SqlHelper.UpdateProfile(loginDetails))
                     {
-                        MessageBox.Show(@"Updated Sucessfully", Application.ProductName, MessageBoxButtons.OK,
-                            MessageBoxIcon.Information);
-                        LoadGridDetails();
+                        MessageBox.Show(@"Updated Sucessfully", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LoadGridDetails(SqlHelper.LoadProfileDetails());
                     }
                     else
                     {
-                        MessageBox.Show(@"Updation Failed", Application.ProductName, MessageBoxButtons.OK,
-                            MessageBoxIcon.Error);
+                        MessageBox.Show(@"Updation Failed", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-
-                    Con.Close();
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
+                    MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
+
+        /// <summary>
+        /// The btnClear_Click.
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/>.</param>
+        /// <param name="e">The e<see cref="EventArgs"/>.</param>
         private void btnClear_Click(object sender, EventArgs e)
         {
             txtID.Text = "";
@@ -315,6 +408,11 @@ namespace DressDetails.Forms
             txtUsername.Enabled = true;
         }
 
+        /// <summary>
+        /// The btnEditDetails_Click.
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/>.</param>
+        /// <param name="e">The e<see cref="EventArgs"/>.</param>
         private void btnEditDetails_Click(object sender, EventArgs e)
         {
             try
@@ -325,46 +423,14 @@ namespace DressDetails.Forms
 
                 if (!string.IsNullOrWhiteSpace(txtID.Text))
                 {
-                    string conn = ConfigurationManager.ConnectionStrings["Conn"].ToString();
-                    Con = new SqlConnection(conn);
-                    Con.Open();
-
-                    string strQuery =  @"SELECT Id,Name,Address,UserName,Password,ContactNumber,ISAdmin,ISActive FROM LOGINDETAILS Where ID=" + txtID.Text;
-                    SqlCommand cm = new SqlCommand(strQuery, Con)
-                    {
-                        CommandText = strQuery,
-                        CommandType = CommandType.Text,
-                        Connection = Con
-                    };
-                    var dataReader = cm.ExecuteReader();
-                    DataTable dataTable = new DataTable();
-                    dataTable.Load(dataReader);
-                    if (dataTable.Rows.Count > 0)
-                    {
-                        var row = (from DataRow dr in dataTable.Rows
-                                   select new LoginDetails()
-                                   {
-                                       Id = Convert.ToInt32(dr["Id"]),
-                                       Name = Convert.ToString(dr["Name"]),
-                                       Address = Convert.ToString(dr["Address"]),
-                                       UserName = Convert.ToString(dr["UserName"]),
-                                       ContactNumber = Convert.ToString(dr["ContactNumber"]),
-                                       Password = Convert.ToString(dr["Password"]),
-                                       IsAdmin = Convert.ToBoolean(dr["ISAdmin"]) ? "Yes" : "No",
-                                       IsActive = Convert.ToBoolean(dr["IsActive"]) ? "Yes" : "No"
-                                   }).FirstOrDefault();
-                        txtName.Text = row.Name;
-                        txtAddress.Text = row.Address;
-                        txtMobileNumber.Text = row.ContactNumber;
-                        txtUsername.Text = row.UserName;
-                        txtPassword.Text = row.Password;
-                        cmbIsAdmin.SelectedValue = (row.IsAdmin == "Yes") ? 1 : 2;
-                        cmbIsActive.SelectedValue = (row.IsAdmin == "Yes") ? 1 : 2;
-                    }
-                    else
-                        MessageBox.Show(@"Enter Valid ID!...", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                    Con.Close();
+                    LoginDetails loginDetails = SqlHelper.GetProfileDetailsById(Convert.ToInt32(txtID.Text));
+                    txtName.Text = loginDetails.Name;
+                    txtAddress.Text = loginDetails.Address;
+                    txtMobileNumber.Text = loginDetails.ContactNumber;
+                    txtUsername.Text = loginDetails.UserName;
+                    txtPassword.Text = loginDetails.Password;
+                    cmbIsAdmin.SelectedValue = (loginDetails.IsAdmin == "Yes") ? 1 : 2;
+                    cmbIsActive.SelectedValue = (loginDetails.IsActive == "Yes") ? 1 : 2;
                 }
                 else
                 {
@@ -379,19 +445,6 @@ namespace DressDetails.Forms
             {
                 MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        } 
-        #endregion
-
-        private class LoginDetails
-        {
-            public int Id { get; set; }
-            public string Name { get; set; }
-            public string Address { get; set; }
-            public string UserName { get; set; }
-            public string ContactNumber { get; set; }
-            public string IsAdmin { get; set; }
-            public string IsActive { get; set; }
-            public string Password { get; set; }
         }
     }
 }

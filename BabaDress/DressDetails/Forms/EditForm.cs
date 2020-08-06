@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DressDetails.Helper;
+using DressDetails.Models;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -14,8 +16,7 @@ namespace DressDetails.Forms
     {
         #region PROPERTY
         Timer _timer;
-        private SqlConnection _con;
-        private readonly string _conn, _userName;
+        private readonly string _userName;
         public readonly int userId, isAdmin;
         public bool blnDataGridCreations;
         #endregion
@@ -27,8 +28,8 @@ namespace DressDetails.Forms
             ddlYear_DataBing();
             ddlMonth_DataBing();
             StartTimer();
+
             MaximizeBox = false;
-            _conn = ConfigurationManager.ConnectionStrings["Conn"].ToString();
             blnDataGridCreations = false;
             userId = id; _userName = name; isAdmin = admin;
             lblUsername.Text = @"Welcome.: " + _userName;
@@ -77,7 +78,6 @@ namespace DressDetails.Forms
         {
             Application.Exit();
         }
-
 
         #endregion
 
@@ -155,26 +155,11 @@ namespace DressDetails.Forms
                 if (!string.IsNullOrWhiteSpace(ddlYear.SelectedValue.ToString()) && !ddlYear.SelectedValue.ToString().Contains("Select") &&
                     !string.IsNullOrWhiteSpace(ddlMonth.SelectedValue.ToString()) && !ddlMonth.SelectedValue.ToString().Contains("Select") && ddlMonth.SelectedValue.ToString() != "0")
                 {
-                    string conn = ConfigurationManager.ConnectionStrings["Conn"].ToString();
-                    _con = new SqlConnection(conn);
-                    _con.Open();
+                    List<DevoteeDetails> lstDressDetails = SqlHelper.GetDressDetails(Convert.ToInt32(ddlMonth.SelectedValue), Convert.ToInt32(ddlYear.SelectedValue));
 
-                    string strQuery = @"SELECT T1.DEVOTEENAME,T1.ADDRESS,T1.CONTACTNUMBER,T1.BOOKEDDATE,T1.BOOKEDMONTH,T1.BOOKEDYEAR,T2.NAME,T1.InsertedOn FROM  DRESSDETAILS T1 INNER JOIN LOGINDETAILS T2 ON T1.InsertedBy=T2.ID  WHERE T1.BookedMonth='" + ddlMonth.SelectedValue + "' AND T1.BookedYear='" + ddlYear.SelectedValue + "'";
-                
-                    //string strQuery = @"SELECT * FROM  DRESSDETAILS  WHERE BookedMonth='" + ddlMonth.SelectedValue + "' AND BookedYear='" + ddlYear.SelectedValue + "'";
-                    SqlCommand cm = new SqlCommand(strQuery, _con)
-                    {
-                        CommandText = strQuery,
-                        CommandType = CommandType.Text,
-                        Connection = _con
-                    };
-                    var dataReader = cm.ExecuteReader();
-                    DataTable dataTable = new DataTable();
-                    dataTable.Load(dataReader);
                     if (!blnDataGridCreations)
                         DataGridCreation();
-                    PolulateGridDetails(dataTable);
-                    _con.Close();
+                    PolulateGridDetails(lstDressDetails);
                 }
             }
             catch (Exception ex)
@@ -250,7 +235,6 @@ namespace DressDetails.Forms
             CreatedOn.TextBox.Name = "CREATEDON";
             CreatedOn.Alignment = HorizontalAlignment.Left;
 
-
             dgMonthdetails.Columns[0].Width = 50;
             dgMonthdetails.Columns[1].Width = 120;
             dgMonthdetails.Columns[2].Width = 100;
@@ -266,37 +250,26 @@ namespace DressDetails.Forms
             blnDataGridCreations = true;
            
         }
-        private void PolulateGridDetails(DataTable table)
+        /// <summary>
+        /// The PolulateGridDetails.
+        /// </summary>
+        /// <param name="lstDressDetails">The lstDressDetails<see cref="List{DevoteeDetails}"/>.</param>
+        private void PolulateGridDetails(List<DevoteeDetails> lstDressDetails)
         {
-            int slno = 0;
             dgMonthdetails.Rows.Clear();
             dgMonthdetails.Refresh();
+
             DateTime startDate = new DateTime(Convert.ToInt32(ddlYear.SelectedValue), Convert.ToInt32(ddlMonth.SelectedValue.ToString()), 1);
             DateTime endDate = startDate.AddMonths(1).AddDays(-1);
 
             for (var day = startDate.Date; day <= endDate; day = day.AddDays(1))
             {
-                var row = (from DataRow dr in table.Rows
-                           where (dr["BOOKEDDATE"] != null && Convert.ToDateTime(dr["BOOKEDDATE"]).Date == day.Date)
-                           select new DressDetails()
-                           {
-                               BookDate = Convert.ToString(dr["BOOKEDDATE"]),
-                               Name = Convert.ToString(dr["DEVOTEENAME"]),
-                               Address = Convert.ToString(dr["ADDRESS"]),
-                               ContactNumber = Convert.ToString(dr["CONTACTNUMBER"]),
-                               Month = Convert.ToString(dr["BOOKEDMONTH"]),
-                               Year = Convert.ToString(dr["BOOKEDYEAR"]),
-                               CreatedBy = Convert.ToString(dr["NAME"]),
-                               CreatedOn = Convert.ToDateTime(dr["InsertedOn"], CultureInfo.CurrentCulture),
+                var row = lstDressDetails.Where(n => Convert.ToDateTime(n.BookDate).Date == day.Date).FirstOrDefault();
 
-                           }).FirstOrDefault();
-
-                slno = slno + 1;
                 if (row != null && Convert.ToDateTime(day).Date == Convert.ToDateTime(row.BookDate).Date)
-                    dgMonthdetails.Rows.Add(slno.ToString(), DateTime.Parse(row.BookDate).ToString("dd/MMM/yyyy"), day.DayOfWeek.ToString(), row.Name, row.Address, row.ContactNumber,"","","",row.CreatedBy,row.CreatedOn);
+                    dgMonthdetails.Rows.Add(row.RowNumber.ToString(), DateTime.Parse(row.BookDate).ToString("dd/MMM/yyyy"), day.DayOfWeek.ToString(), row.Name, row.Address, row.ContactNumber, "", "","", row.CreatedBy, row.CreatedOn);
                 else
-                    dgMonthdetails.Rows.Add(slno.ToString(), day.Date.ToString("dd/MMM/yyyy"), day.DayOfWeek.ToString(), "", "", "");
-              
+                    dgMonthdetails.Rows.Add(row.RowNumber.ToString(), day.Date.ToString("dd/MMM/yyyy"), day.DayOfWeek.ToString(), "", "", "", "", "", "","","");
             }
 
             foreach (DataGridViewRow row in dgMonthdetails.Rows)
@@ -333,8 +306,8 @@ namespace DressDetails.Forms
                     string date = row.Cells["BOOKINGDATE"].Value.ToString();
                     DateTime bookingDate = DateTime.Parse(row.Cells["BOOKINGDATE"].Value.ToString());
 
-                    if (CheckIfRecordExistsDb(date, bookingDate.Month.ToString(), bookingDate.Year.ToString()))
-                        UpdateDressDetails(date, devoteeName, address, contactNumber);
+                    if (SqlHelper.ValidateBeforeEdit(date, bookingDate.Month.ToString(), bookingDate.Year.ToString()))
+                        SqlHelper.UpdateDressDetails(date, devoteeName, address, contactNumber,userId);
                     else
                         MessageBox.Show(@"No bookings were found", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -361,148 +334,59 @@ namespace DressDetails.Forms
                 MessageBoxButtons buttons = MessageBoxButtons.YesNo;
                 DialogResult result = MessageBox.Show(message, title, buttons);
 
-                if (CheckIfRecordExistsDb(date, bookingDate.Month.ToString(), bookingDate.Year.ToString()))
+                if (SqlHelper.ValidateBeforeEdit(date, bookingDate.Month.ToString(), bookingDate.Year.ToString()))
                 {
                     if (result == DialogResult.Yes)
-                        DeleteDressDetails(date);
+                        SqlHelper.DeleteDressDetails(date);
                 }
                 else
                     MessageBox.Show(@"No bookings were found", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+            
 
-        private void UpdateDressDetails(string date, string devoteeName, string address, string contactNumber)
-        {
-            DateTime bookingDate = DateTime.Parse(date);
-
-            var strUpdateQuery = "UPDATE DRESSDETAILS Set DEVOTEENAME='" + devoteeName.ToUpper() + "',Address='" + address.Trim() + "',ContactNumber='" + contactNumber + "',UpdatedBy='" + userId + "',UpdatedOn='" + DateTime.Now +
-                                "' WHERE BOOKEDDATE='" + bookingDate + "'";
-
-            if (string.IsNullOrWhiteSpace(devoteeName))
-            {
-                MessageBox.Show(@"Type Devotee Name", @"Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-            else if (string.IsNullOrWhiteSpace(address))
-            {
-                MessageBox.Show(@"Type Devotee Address", @"Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-            else if (string.IsNullOrWhiteSpace(contactNumber))
-            {
-                MessageBox.Show(@"Type ContactNumber", @"Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-            _con = new SqlConnection(_conn);
-            _con.Open();
-
-            var cm = new SqlCommand(strUpdateQuery, _con);
-            try
-            {
-                var intAffectedRow = cm.ExecuteNonQuery();
-                if (intAffectedRow > 0)
-                {
-                    MessageBox.Show(@"Updated Sucessfully", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else
-                {
-                    MessageBox.Show(@"Updation Failed", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                _con.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
-            }
-        }
-
-        private void DeleteDressDetails(string date)
-        {
-            DateTime bookingDate = DateTime.Parse(date);
-
-            var strDeleteQuery = "DELETE FROM DRESSDETAILS WHERE BOOKEDDATE='" + bookingDate + "'";
-            _con = new SqlConnection(_conn);
-            _con.Open();
-
-            var cm = new SqlCommand(strDeleteQuery, _con);
-            try
-            {
-                var intAffectedRow = cm.ExecuteNonQuery();
-                if (intAffectedRow > 0)
-                {
-                    MessageBox.Show(@"Deleted Sucessfully", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else
-                {
-                    MessageBox.Show(@"Deletion Failed", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                _con.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private bool CheckIfRecordExistsDb(string bookingDate, string month, string year)
-        {
-            try
-            {
-                if (!string.IsNullOrWhiteSpace(month) && !string.IsNullOrWhiteSpace(year))
-                {
-                    _con = new SqlConnection(_conn);
-                    _con.Open();
-                    string strQuery = @"SELECT * FROM  DRESSDETAILS  WHERE BookedMonth='" + month + "' AND BookedYear='" + year + "'";
-                    SqlCommand cm = new SqlCommand(strQuery, _con)
-                    {
-                        CommandText = strQuery,
-                        CommandType = CommandType.Text,
-                        Connection = _con
-                    };
-                    var dataReader = cm.ExecuteReader();
-                    DataTable dataTable = new DataTable();
-                    dataTable.Load(dataReader);
-                    if (dataTable != null && dataTable.Rows.Count > 0)
-                    {
-                        int count = (from DataRow dr in dataTable.Rows
-                                     where (dr["BOOKEDDATE"] != null && Convert.ToDateTime(dr["BOOKEDDATE"]).Date == Convert.ToDateTime(bookingDate).Date)
-                                     select new DressDetails()
-                                     {
-                                         BookDate = Convert.ToString(dr["BOOKEDDATE"]),
-                                     }).Count();
-                        if (count == 1)
-                            return true;
-                    }
-                }
-                return false;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-            finally
-            {
-                _con.Close();
-            }
-        }
-
-        private class DressDetails
-        {
-            public string BookDate { get; set; }
-            public string Name { get; set; }
-            public string Address { get; set; }
-            public string ContactNumber { get; set; }
-            public string Month { get; set; }
-            public string Year { get; set; }
-            public string IsCreated { get; set; }
-            public string IsUpdated { get; set; }
-            public string CreatedBy { get; set; }
-            public DateTime CreatedOn { get; set; }
-            public string UpdatedBy { get; set; }
-            public DateTime UpdatedOn { get; set; }
-        }
+        //private bool CheckIfRecordExistsDb(string bookingDate, string month, string year)
+        //{
+        //    try
+        //    {
+        //        if (!string.IsNullOrWhiteSpace(month) && !string.IsNullOrWhiteSpace(year))
+        //        {
+        //            _con = new SqlConnection(_conn);
+        //            _con.Open();
+        //            string strQuery = @"SELECT * FROM  DRESSDETAILS  WHERE BookedMonth='" + month + "' AND BookedYear='" + year + "'";
+        //            SqlCommand cm = new SqlCommand(strQuery, _con)
+        //            {
+        //                CommandText = strQuery,
+        //                CommandType = CommandType.Text,
+        //                Connection = _con
+        //            };
+        //            var dataReader = cm.ExecuteReader();
+        //            DataTable dataTable = new DataTable();
+        //            dataTable.Load(dataReader);
+        //            if (dataTable != null && dataTable.Rows.Count > 0)
+        //            {
+        //                int count = (from DataRow dr in dataTable.Rows
+        //                             where (dr["BOOKEDDATE"] != null && Convert.ToDateTime(dr["BOOKEDDATE"]).Date == Convert.ToDateTime(bookingDate).Date)
+        //                             select new DevoteeDetails()
+        //                             {
+        //                                 BookDate = Convert.ToString(dr["BOOKEDDATE"]),
+        //                             }).Count();
+        //                if (count == 1)
+        //                    return true;
+        //            }
+        //        }
+        //        return false;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //        return false;
+        //    }
+        //    finally
+        //    {
+        //        _con.Close();
+        //    }
+        //}       
         #endregion
     }
 }

@@ -1,26 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Data.SqlClient;
-using System.Drawing;
-using System.Globalization;
-using System.Linq;
-using System.Windows.Forms;
-
-namespace DressDetails.Forms
+﻿namespace DressDetails.Forms
 {
+    using DressDetails.Helper;
+    using DressDetails.Models;
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Drawing;
+    using System.Globalization;
+    using System.Linq;
+    using System.Windows.Forms;
+
+    /// <summary>
+    /// Defines the <see cref="CreateForm" />.
+    /// </summary>
     public partial class CreateForm : Form
     {
-        #region PROPERTY
-        Timer _timer;
-        private SqlConnection _con;
-        private readonly string _conn, _userName;
-        public readonly int userId, isAdmin;
-        public bool blnDataGridCreations;
-        #endregion
+        /// <summary>
+        /// Defines the _timer.
+        /// </summary>
+        internal Timer _timer;
 
-        #region Constructor
+        /// <summary>
+        /// Defines the _conn, _userName.
+        /// </summary>
+        private readonly string _conn, _userName;
+
+        /// <summary>
+        /// Defines the userId, isAdmin.
+        /// </summary>
+        public readonly int userId, isAdmin;
+
+        /// <summary>
+        /// Defines the blnDataGridCreations.
+        /// </summary>
+        public bool blnDataGridCreations;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CreateForm"/> class.
+        /// </summary>
+        /// <param name="id">The id<see cref="int"/>.</param>
+        /// <param name="name">The name<see cref="string"/>.</param>
+        /// <param name="admin">The admin<see cref="int"/>.</param>
         public CreateForm(int id, string name, int admin)
         {
             InitializeComponent();
@@ -29,7 +49,6 @@ namespace DressDetails.Forms
             StartTimer();
 
             MaximizeBox = false;
-            _conn = ConfigurationManager.ConnectionStrings["Conn"].ToString();
 
             userId = id; _userName = name; isAdmin = admin;
             LblUsername.Text = @"Welcome.: " + _userName;
@@ -38,10 +57,10 @@ namespace DressDetails.Forms
             if (isAdmin == 1)
                 AddMenuAndItems();
         }
-        #endregion
 
-        #region TIMER VALIDATIONS
-
+        /// <summary>
+        /// The StartTimer.
+        /// </summary>
         private void StartTimer()
         {
             _timer = new Timer { Interval = 1000 };
@@ -49,14 +68,19 @@ namespace DressDetails.Forms
             _timer.Enabled = true;
         }
 
-        void tmr_Tick(object sender, EventArgs e)
+        /// <summary>
+        /// The tmr_Tick.
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/>.</param>
+        /// <param name="e">The e<see cref="EventArgs"/>.</param>
+        internal void tmr_Tick(object sender, EventArgs e)
         {
             lblDateValue.Text = DateTime.Now.ToString(CultureInfo.CurrentCulture);
         }
-        #endregion
 
-        #region MENU DETAILS
-
+        /// <summary>
+        /// The AddMenuAndItems.
+        /// </summary>
         private void AddMenuAndItems()
         {
             Menu = new MainMenu();
@@ -77,6 +101,11 @@ namespace DressDetails.Forms
             oProfile.MenuItems.Add("View Profile", Profile_Click);
         }
 
+        /// <summary>
+        /// The Update_Click.
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/>.</param>
+        /// <param name="e">The e<see cref="EventArgs"/>.</param>
         private void Update_Click(object sender, EventArgs e)
         {
             EditForm obj = new EditForm(userId, _userName, isAdmin);
@@ -84,21 +113,31 @@ namespace DressDetails.Forms
             obj.ShowDialog();
         }
 
+        /// <summary>
+        /// The Profile_Click.
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/>.</param>
+        /// <param name="e">The e<see cref="EventArgs"/>.</param>
         private void Profile_Click(object sender, EventArgs e)
         {
             ProfileForm obj = new ProfileForm(userId, _userName, isAdmin);
             Hide();
             obj.ShowDialog();
         }
+
+        /// <summary>
+        /// The ExitApplication_click.
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/>.</param>
+        /// <param name="e">The e<see cref="EventArgs"/>.</param>
         private void ExitApplication_click(object sender, EventArgs e)
         {
             Application.Exit();
         }
 
-
-        #endregion
-
-        #region DROPDOWN LIST - MONTH & YEAR
+        /// <summary>
+        /// Defines the _monthList.
+        /// </summary>
         private readonly Dictionary<int, string> _monthList = new Dictionary<int, string>()
         {
             { 0, "<-Select->"},
@@ -116,6 +155,9 @@ namespace DressDetails.Forms
             {12, "December"},
         };
 
+        /// <summary>
+        /// The ddlMonth_DataBing.
+        /// </summary>
         private void ddlMonth_DataBing()
         {
             ddlMonth.DataSource = new BindingSource(_monthList, null);
@@ -123,6 +165,9 @@ namespace DressDetails.Forms
             ddlMonth.ValueMember = "Key";
         }
 
+        /// <summary>
+        /// The ddlYear_DataBing.
+        /// </summary>
         private void ddlYear_DataBing()
         {
             Dictionary<string, string> yearList = new Dictionary<string, string>();
@@ -137,18 +182,29 @@ namespace DressDetails.Forms
             ddlYear.ValueMember = "Key";
         }
 
+        /// <summary>
+        /// The ddlMonth_SelectedValueChanged.
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/>.</param>
+        /// <param name="e">The e<see cref="EventArgs"/>.</param>
         private void ddlMonth_SelectedValueChanged(object sender, EventArgs e)
         {
             GetDressDetails();
         }
 
+        /// <summary>
+        /// The ddlYear_SelectedValueChanged.
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/>.</param>
+        /// <param name="e">The e<see cref="EventArgs"/>.</param>
         private void ddlYear_SelectedValueChanged(object sender, EventArgs e)
         {
             GetDressDetails();
         }
-        #endregion
 
-        #region DRESS DETAILS
+        /// <summary>
+        /// The GetDressDetails.
+        /// </summary>
         private void GetDressDetails()
         {
             try
@@ -156,25 +212,13 @@ namespace DressDetails.Forms
                 if (!string.IsNullOrWhiteSpace(ddlYear.SelectedValue.ToString()) && !ddlYear.SelectedValue.ToString().Contains("Select") &&
                     !string.IsNullOrWhiteSpace(ddlMonth.SelectedValue.ToString()) && !ddlMonth.SelectedValue.ToString().Contains("Select") && ddlMonth.SelectedValue.ToString() != "0")
                 {
-                    string conn = ConfigurationManager.ConnectionStrings["Conn"].ToString();
-                    _con = new SqlConnection(conn);
-                    _con.Open();
-
-                    string strQuery = @"SELECT T1.DEVOTEENAME,T1.ADDRESS,T1.CONTACTNUMBER,T1.BOOKEDDATE,T1.BOOKEDMONTH,T1.BOOKEDYEAR,T2.NAME,T1.InsertedOn FROM  DRESSDETAILS T1 INNER JOIN LOGINDETAILS T2 ON T1.InsertedBy=T2.ID  WHERE T1.BookedMonth='" + ddlMonth.SelectedValue + "' AND T1.BookedYear='" + ddlYear.SelectedValue + "'";
-                                         
-                    SqlCommand cm = new SqlCommand(strQuery, _con)
-                    {
-                        CommandText = strQuery,
-                        CommandType = CommandType.Text,
-                        Connection = _con
-                    };
-                    var dataReader = cm.ExecuteReader();
-                    DataTable dataTable = new DataTable();
-                    dataTable.Load(dataReader);
+                    List<DevoteeDetails> lstDressDetails = SqlHelper.GetDressDetails(Convert.ToInt32(ddlMonth.SelectedValue), Convert.ToInt32(ddlYear.SelectedValue));
                     if (!blnDataGridCreations)
+                    {
                         DataGridCreation();
-                    PolulateGridDetails(dataTable);
-                    _con.Close();
+                    }
+
+                    PolulateGridDetails(lstDressDetails);
                 }
             }
             catch (Exception ex)
@@ -183,6 +227,9 @@ namespace DressDetails.Forms
             }
         }
 
+        /// <summary>
+        /// The DataGridCreation.
+        /// </summary>
         private void DataGridCreation()
         {
             DataGridTextBoxColumn serlNo = new DataGridTextBoxColumn();
@@ -204,7 +251,7 @@ namespace DressDetails.Forms
             dgMonthdetails.Columns.Add("DEVOTEENAME", "Devotee Name");
             devoteename.TextBox.Name = "DEVOTEENAME";
             devoteename.TextBox.CharacterCasing = CharacterCasing.Upper;
-            devoteename.Alignment = HorizontalAlignment.Left;            
+            devoteename.Alignment = HorizontalAlignment.Left;
 
             DataGridTextBoxColumn address = new DataGridTextBoxColumn();
             dgMonthdetails.Columns.Add("ADDRESS", "Address");
@@ -238,7 +285,7 @@ namespace DressDetails.Forms
             DataGridTextBoxColumn CreatedOn = new DataGridTextBoxColumn();
             dgMonthdetails.Columns.Add("CREATEDON", "Created On");
             CreatedOn.TextBox.Name = "CREATEDON";
-            CreatedOn.Alignment = HorizontalAlignment.Left;        
+            CreatedOn.Alignment = HorizontalAlignment.Left;
 
             dgMonthdetails.Columns[0].Width = 50;
             dgMonthdetails.Columns[1].Width = 120;
@@ -252,39 +299,31 @@ namespace DressDetails.Forms
             dgMonthdetails.Columns["Days"].ReadOnly = true;
             dgMonthdetails.Columns["CREATEDBY"].ReadOnly = true;
             dgMonthdetails.Columns["CREATEDON"].ReadOnly = true;
-          
+
             dgMonthdetails.Refresh();
             blnDataGridCreations = true;
         }
-        private void PolulateGridDetails(DataTable table)
+
+        /// <summary>
+        /// The PolulateGridDetails.
+        /// </summary>
+        /// <param name="lstDressDetails">The lstDressDetails<see cref="List{DevoteeDetails}"/>.</param>
+        private void PolulateGridDetails(List<DevoteeDetails> lstDressDetails)
         {
-            int slno = 0;
             dgMonthdetails.Rows.Clear();
             dgMonthdetails.Refresh();
+
             DateTime startDate = new DateTime(Convert.ToInt32(ddlYear.SelectedValue), Convert.ToInt32(ddlMonth.SelectedValue.ToString()), 1);
             DateTime endDate = startDate.AddMonths(1).AddDays(-1);
 
             for (var day = startDate.Date; day <= endDate; day = day.AddDays(1))
             {
-                var row = (from DataRow dr in table.Rows
-                           where (dr["BOOKEDDATE"] != null && Convert.ToDateTime(dr["BOOKEDDATE"]).Date == day.Date)
-                           select new DressDetails()
-                           {
-                               BookDate = Convert.ToString(dr["BOOKEDDATE"]),
-                               Name = Convert.ToString(dr["DEVOTEENAME"]),
-                               Address = Convert.ToString(dr["ADDRESS"]),
-                               ContactNumber = Convert.ToString(dr["CONTACTNUMBER"]),
-                               Month = Convert.ToString(dr["BOOKEDMONTH"]),
-                               Year = Convert.ToString(dr["BOOKEDYEAR"]),
-                               CreatedBy = Convert.ToString(dr["NAME"]),
-                               CreatedOn = Convert.ToDateTime(dr["InsertedOn"],CultureInfo.CurrentCulture),
-                           }).FirstOrDefault();
+                var row = lstDressDetails.Where(n => Convert.ToDateTime(n.BookDate).Date == day.Date).FirstOrDefault();
 
-                slno = slno + 1;
                 if (row != null && Convert.ToDateTime(day).Date == Convert.ToDateTime(row.BookDate).Date)
-                    dgMonthdetails.Rows.Add(slno.ToString(), DateTime.Parse(row.BookDate).ToString("dd/MMM/yyyy"), day.DayOfWeek.ToString(), row.Name, row.Address, row.ContactNumber,"","",row.CreatedBy,row.CreatedOn);
+                    dgMonthdetails.Rows.Add(row.RowNumber.ToString(), DateTime.Parse(row.BookDate).ToString("dd/MMM/yyyy"), day.DayOfWeek.ToString(), row.Name, row.Address, row.ContactNumber, "", "", row.CreatedBy, row.CreatedOn);
                 else
-                    dgMonthdetails.Rows.Add(slno.ToString(), day.Date.ToString("dd/MMM/yyyy"), day.DayOfWeek.ToString(), "", "", "");
+                    dgMonthdetails.Rows.Add(row.RowNumber.ToString(), day.Date.ToString("dd/MMM/yyyy"), day.DayOfWeek.ToString(), "", "", "" ,"", "", "", "");
             }
 
             foreach (DataGridViewRow row in dgMonthdetails.Rows)
@@ -308,58 +347,23 @@ namespace DressDetails.Forms
             dgMonthdetails.Focus();
         }
 
+        /// <summary>
+        /// The InsertDressDetails.
+        /// </summary>
+        /// <param name="date">The date<see cref="string"/>.</param>
+        /// <param name="devoteeName">The devoteeName<see cref="string"/>.</param>
+        /// <param name="address">The address<see cref="string"/>.</param>
+        /// <param name="contactNumber">The contactNumber<see cref="string"/>.</param>
         private void InsertDressDetails(string date, string devoteeName, string address, string contactNumber)
         {
-            DateTime bookingDate = DateTime.Parse(date);
-            string month = bookingDate.Month.ToString(), year = bookingDate.Year.ToString();
-            string strInsertQuery = "INSERT INTO DRESSDETAILS(BOOKEDDATE,DEVOTEENAME,ADDRESS,CONTACTNUMBER,BOOKEDMONTH,BOOKEDYEAR,InsertedBy)VALUES(@BOOKEDDATE,@DEVOTEENAME,@ADDRESS,@CONTACTNUMBER,@BOOKEDMONTH,@BOOKEDYEAR,@InsertedBy)";
-
-
-            if (string.IsNullOrWhiteSpace(devoteeName))
-            {
-                MessageBox.Show(@"Type Devotee Name", @"Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-            else if (string.IsNullOrWhiteSpace(address))
-            {
-                MessageBox.Show(@"Type Devotee Address", @"Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-            else if (string.IsNullOrWhiteSpace(contactNumber))
-            {
-                MessageBox.Show(@"Type ContactNumber", @"Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-            _con = new SqlConnection(_conn);
-            _con.Open();
-
-            SqlCommand cm = new SqlCommand(strInsertQuery, _con);
-            cm.Parameters.AddWithValue("@BOOKEDDATE", bookingDate);
-            cm.Parameters.AddWithValue("@DEVOTEENAME", devoteeName.ToUpper());
-            cm.Parameters.AddWithValue("@ADDRESS", address);
-            cm.Parameters.AddWithValue("@CONTACTNUMBER", contactNumber);
-            cm.Parameters.AddWithValue("@BOOKEDMONTH", month);
-            cm.Parameters.AddWithValue("@BOOKEDYEAR", year);
-            cm.Parameters.AddWithValue("@InsertedBy", userId.ToString());
-            try
-            {
-                int intAffectedRow = cm.ExecuteNonQuery();
-                if (intAffectedRow > 0)
-                {
-                    MessageBox.Show(@"Booked Sucessfully", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else
-                {
-                    MessageBox.Show(@"Booked Failed", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                _con.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            SqlHelper.InsertDressDetails(date, devoteeName, address, contactNumber, userId);
         }
 
+        /// <summary>
+        /// The dgMonthdetails_CellContentClick.
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/>.</param>
+        /// <param name="e">The e<see cref="DataGridViewCellEventArgs"/>.</param>
         private void dgMonthdetails_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.ColumnIndex == 6)
@@ -374,10 +378,10 @@ namespace DressDetails.Forms
                     string month = Convert.ToDateTime(date).Month.ToString();
                     string year = Convert.ToDateTime(date).Year.ToString();
 
-                    if (CheckIfRecordExistsDb(date, month, year))
+                    if (SqlHelper.ValidateBeforeCreate(date, month, year))
                         InsertDressDetails(date, devoteeName, address, contactNumber);
                     else
-                        MessageBox.Show(@"Booked Failed - Details cannot be edited!.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(@"Booked Failed - Recored Already Exists.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             if (e.ColumnIndex == 7)
@@ -389,7 +393,7 @@ namespace DressDetails.Forms
                     string month = Convert.ToDateTime(date).Month.ToString();
                     string year = Convert.ToDateTime(date).Year.ToString();
 
-                    if (CheckIfRecordExistsDb(date, month, year))
+                    if (SqlHelper.ValidateBeforeCreate(date, month, year))
                     {
                         row.Cells["DEVOTEENAME"].Value = "";
                         row.Cells["ADDRESS"].Value = "";
@@ -400,64 +404,5 @@ namespace DressDetails.Forms
                 }
             }
         }
-        private bool CheckIfRecordExistsDb(string bookingDate, string month, string year)
-        {
-            try
-            {
-                if (!string.IsNullOrWhiteSpace(month) && !string.IsNullOrWhiteSpace(year))
-                {
-                    _con = new SqlConnection(_conn);
-                    _con.Open();
-                    string strQuery = @"SELECT * FROM  DRESSDETAILS  WHERE BookedMonth='" + month + "' AND BookedYear='" + year + "'";
-                    SqlCommand cm = new SqlCommand(strQuery, _con)
-                    {
-                        CommandText = strQuery,
-                        CommandType = CommandType.Text,
-                        Connection = _con
-                    };
-                    var dataReader = cm.ExecuteReader();
-                    DataTable dataTable = new DataTable();
-                    dataTable.Load(dataReader);
-                    if (dataTable != null && dataTable.Rows.Count > 0)
-                    {
-                        int count = (from DataRow dr in dataTable.Rows
-                                     where (dr["BOOKEDDATE"] != null && Convert.ToDateTime(dr["BOOKEDDATE"]).Date == Convert.ToDateTime(bookingDate).Date)
-                                     select new DressDetails()
-                                     {
-                                         BookDate = Convert.ToString(dr["BOOKEDDATE"]),
-                                     }).Count();
-                        if (count == 1)
-                            return false;
-                    }
-                }
-                return true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-            finally
-            {
-                _con.Close();
-            }
-        }
-
-        private class DressDetails
-        {
-            public string BookDate { get; set; }
-            public string Name { get; set; }
-            public string Address { get; set; }
-            public string ContactNumber { get; set; }
-            public string Month { get; set; }
-            public string Year { get; set; }
-            public string IsCreated { get; set; }
-            public string IsUpdated { get; set; }
-            public string CreatedBy { get; set; }
-            public DateTime CreatedOn { get; set; }
-        }
-        #endregion
     }
-
-  
 }

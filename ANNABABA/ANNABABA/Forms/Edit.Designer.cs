@@ -235,7 +235,7 @@
             // txtChequeNumber
             // 
             this.txtChequeNumber.Location = new System.Drawing.Point(207, 306);
-            this.txtChequeNumber.MaxLength = 100;
+            this.txtChequeNumber.MaxLength = 10;
             this.txtChequeNumber.Name = "txtChequeNumber";
             this.txtChequeNumber.Size = new System.Drawing.Size(393, 27);
             this.txtChequeNumber.TabIndex = 12;

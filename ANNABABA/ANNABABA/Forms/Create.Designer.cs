@@ -324,7 +324,7 @@
             // txtChequeNumber
             // 
             this.txtChequeNumber.Location = new System.Drawing.Point(184, 306);
-            this.txtChequeNumber.MaxLength = 40;
+            this.txtChequeNumber.MaxLength = 10;
             this.txtChequeNumber.Name = "txtChequeNumber";
             this.txtChequeNumber.Size = new System.Drawing.Size(392, 27);
             this.txtChequeNumber.TabIndex = 12;
@@ -338,7 +338,7 @@
             this.cmbPaymentMode.Name = "cmbPaymentMode";
             this.cmbPaymentMode.Size = new System.Drawing.Size(133, 27);
             this.cmbPaymentMode.TabIndex = 10;
-             this.cmbPaymentMode.SelectedValueChanged += new System.EventHandler(this.cmbPaymentMode_SelectedValueChanged);
+            this.cmbPaymentMode.SelectedValueChanged += new System.EventHandler(this.cmbPaymentMode_SelectedValueChanged);
             // 
             // lblPaymentMode
             // 

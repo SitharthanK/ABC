@@ -1,63 +1,47 @@
-﻿using System;
-using System.Configuration;
-using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Windows.Forms;
-
-namespace DressDetails.Forms
+﻿namespace DressDetails.Forms
 {
+    using DressDetails.Helper;
+    using DressDetails.Models;
+    using System;
+    using System.Windows.Forms;
+
+    /// <summary>
+    /// Defines the <see cref="LoginForm" />.
+    /// </summary>
     public partial class LoginForm : Form
     {
-        SqlConnection _con;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LoginForm"/> class.
+        /// </summary>
         public LoginForm()
         {
             InitializeComponent();
             rbtnUser.Checked = true;
         }
 
+        /// <summary>
+        /// The btnLogin_Click.
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/>.</param>
+        /// <param name="e">The e<see cref="EventArgs"/>.</param>
         private void btnLogin_Click(object sender, EventArgs e)
         {
             try
             {
                 if (!string.IsNullOrWhiteSpace(txtUserName.Text) && !string.IsNullOrWhiteSpace(txtPassword.Text))
                 {
-                    string strQuery;
-                    string conn = ConfigurationManager.ConnectionStrings["Conn"].ToString();
-                    _con = new SqlConnection(conn);
-                    _con.Open();
-                    if (rbtnAdmin.Checked)
-                        strQuery = @"SELECT ID,Name,IsAdmin FROM  LOGINDETAILS WHERE UserName='" + txtUserName.Text + "' AND Password='" + txtPassword.Text + "' AND IsActive=1 AND IsAdmin=1";
-                    else
-                        strQuery = @"SELECT ID,Name,IsAdmin FROM  LOGINDETAILS WHERE UserName='" + txtUserName.Text + "' AND Password='" + txtPassword.Text + "' AND IsActive=1 AND IsAdmin=0";
+                   LoginDetails loginDetails= SqlHelper.Login(txtUserName.Text, txtPassword.Text, rbtnAdmin.Checked);
 
-                    SqlCommand cm = new SqlCommand(strQuery, _con)
+                    if (loginDetails!=null)
                     {
-                        CommandText = strQuery,
-                        CommandType = CommandType.Text,
-                        Connection = _con
-                    };
-                    var dataReader = cm.ExecuteReader();
-                    DataTable dataTable = new DataTable();
-                    dataTable.Load(dataReader);
-                    if (dataTable.Rows.Count > 0)
-                    {
-                        var row = (from DataRow dr in dataTable.Rows
-                                   select new LoginDetails()
-                                   {
-                                       Id = Convert.ToInt32(dr["ID"]),
-                                       Name = Convert.ToString(dr["Name"]),
-                                       IsAdmin = Convert.ToInt32(dr["IsAdmin"]),
-                                   }).FirstOrDefault();
 
-                        CreateForm objCreate = new CreateForm(row.Id, row.Name, row.IsAdmin);
-                        Hide();
+                        CreateForm objCreate = new CreateForm(loginDetails.Id, loginDetails.Name, (loginDetails.IsAdminUser == true ? 1 : 0));
+                        this.Hide();
                         objCreate.Show();
                     }
                     else
                         MessageBox.Show(@"Incorrect UserName or Password", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                    _con.Close();
                 }
                 else
                     MessageBox.Show(@"Incorrect UserName or Password", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -67,19 +51,17 @@ namespace DressDetails.Forms
             {
                 MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
         }
+
+        /// <summary>
+        /// The btnClear_Click.
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/>.</param>
+        /// <param name="e">The e<see cref="EventArgs"/>.</param>
         private void btnClear_Click(object sender, EventArgs e)
         {
             txtUserName.Text = string.Empty;
             txtPassword.Text = string.Empty;
         }
-    }
-
-    internal class LoginDetails
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public int IsAdmin { get; set; }
     }
 }
