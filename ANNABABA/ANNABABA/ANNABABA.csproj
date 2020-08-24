@@ -87,11 +87,17 @@
       <DependentUpon>ABCAnadhanamDetailsDataSet.xsd</DependentUpon>
     </Compile>
     <Compile Include="ABCAnadhanamDetailsDataSetTableAdapters.cs" />
-    <Compile Include="Forms\ABCAnnadhanamReports.cs">
+    <Compile Include="Forms\Records.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\ABCAnnadhanamReports.Designer.cs">
-      <DependentUpon>ABCAnnadhanamReports.cs</DependentUpon>
+    <Compile Include="Forms\Records.Designer.cs">
+      <DependentUpon>Records.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Reports.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Reports.Designer.cs">
+      <DependentUpon>Reports.cs</DependentUpon>
     </Compile>
     <Compile Include="ABCAnnadhanamReportsDataset.cs">
       <DependentUpon>ABCAnnadhanamReportsDataset.xsd</DependentUpon>
@@ -157,8 +163,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ABCAnadhanamDetailsDataSet.xsd</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Forms\ABCAnnadhanamReports.resx">
-      <DependentUpon>ABCAnnadhanamReports.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Records.resx">
+      <DependentUpon>Records.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Reports.resx">
+      <DependentUpon>Reports.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Configure.resx">
       <DependentUpon>Configure.cs</DependentUpon>

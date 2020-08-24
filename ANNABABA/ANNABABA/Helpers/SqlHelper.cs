@@ -301,7 +301,7 @@
 
             if (devotee.PaymentMode == PaymentMode.CHEQUE)
             {
-                cm.Parameters.AddWithValue("@ChequeNo", devotee.ContactNumber);
+                cm.Parameters.AddWithValue("@ChequeNo", devotee.ChequeNo);
                 cm.Parameters.AddWithValue("@ChequeDate", devotee.ChequeDate);
                 cm.Parameters.AddWithValue("@ChequeDrawn", devotee.ChequeDrawn);
             }
@@ -844,6 +844,79 @@
             {
             }
             return lstReceiptNumber;
+        }
+
+        /// <summary>
+        /// The GetData.
+        /// </summary>
+        /// <param name="strReceiptNumber">The strReceiptNumber<see cref="string"/>.</param>
+        /// <returns>The <see cref="DataSet"/>.</returns>
+        internal static List<Devotee> GetDevoteeDetailsByDate(DateTime periodFrom, DateTime periodTo)
+        {
+            List<Devotee> lstDevotee = new List<Devotee>();
+            OpenSqlCeConnection();
+            try
+            {
+                sqlQuery = "SELECT ReceiptNumber,DevoteeName,Address,Country,State,City,Amount,ReceiptCreatedDate,AnadhanamDate,ChequeNo,ChequeDate,ChequeDrawn,Mode,ContactNumber FROM  tblAnnadhanamDetails WHERE (AnadhanamDate>='" + periodFrom + "' AND  AnadhanamDate<='" + periodTo + "') Order By AnadhanamDate Asc";
+                using (con)
+                {
+                    using (SqlCeDataAdapter da = new SqlCeDataAdapter())
+                    {
+                        SqlCeCommand cmd = new SqlCeCommand(sqlQuery, con)
+                        {
+                            Connection = con
+                        };
+                        da.SelectCommand = cmd;
+
+                        DataSet ds = new DataSet();
+                        da.Fill(ds);
+                        con.Close();
+
+
+                        if (ds.Tables[0].Rows.Count > 0)
+                        {
+                            foreach (DataRow dr in ds.Tables[0].Rows)
+                            {
+                                Devotee devotee = new Devotee();
+                                if (dr != null)
+                                {
+                                    if (!string.IsNullOrWhiteSpace(Convert.ToString(dr.ItemArray[12])) && Convert.ToString(dr.ItemArray[12]).ToUpper() == "CHEQUE")
+                                    {
+                                        devotee.PaymentMode = PaymentMode.CHEQUE;
+                                        devotee.ChequeNo = Convert.ToString(dr.ItemArray[9]);
+                                        devotee.ChequeDate = Convert.ToDateTime(dr.ItemArray[10]);
+                                        devotee.ChequeDrawn = Convert.ToString(dr.ItemArray[11]);
+                                    }
+                                    else
+                                    {
+                                        devotee.PaymentMode = PaymentMode.CASH;
+                                    }
+                                    devotee.ReceiptNumber = Convert.ToInt32(dr.ItemArray[0]);
+                                    devotee.DevoteeName = Convert.ToString(dr.ItemArray[1]);
+                                    devotee.Address = Convert.ToString(dr.ItemArray[2]);
+                                    devotee.Country = Convert.ToString(dr.ItemArray[3]);
+                                    devotee.State = Convert.ToString(dr.ItemArray[4]);
+                                    devotee.City = Convert.ToString(dr.ItemArray[5]);
+                                    devotee.Amount = Convert.ToInt32(dr.ItemArray[6]);
+                                    devotee.ReceiptCreatedDate = Convert.ToDateTime(dr.ItemArray[7]);
+                                    devotee.AnadhanamDate = Convert.ToDateTime(dr.ItemArray[8]);
+                                    devotee.ContactNumber = Convert.ToString(dr.ItemArray[13]);
+                                }
+                                lstDevotee.Add(devotee);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (SqlCeException ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            return lstDevotee;
         }
     }
 }

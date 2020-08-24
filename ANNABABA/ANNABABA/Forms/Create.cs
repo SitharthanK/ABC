@@ -82,7 +82,7 @@
             MenuItem OFile = new MenuItem("File");
             MenuItem OEdit = new MenuItem("Edit");
             MenuItem OView = new MenuItem("View");
-            MenuItem OConfigure = new MenuItem("Configure");
+            MenuItem OSettings = new MenuItem("Settings");
 
             /*FILE MENU ITEMS*/
             this.Menu.MenuItems.Add(OFile);
@@ -101,11 +101,19 @@
             this.Menu.MenuItems.Add(OView);
             OView.MenuItems.Add("Report", new EventHandler(Report_Click));
 
-            this.Menu.MenuItems.Add(OConfigure);
-            OConfigure.MenuItems.Add("Configure", new EventHandler(ConfigureApplication_click));
+            this.Menu.MenuItems.Add(OView);
+            OView.MenuItems.Add("Records", new EventHandler(Records_Click));
+
+            this.Menu.MenuItems.Add(OSettings);
+            OSettings.MenuItems.Add("Configure", new EventHandler(ConfigureApplication_click));
         }
 
-        
+        private void Records_Click(object sender, EventArgs e)
+        {
+            Records objRecords = new Records();
+            objRecords.ShowDialog();
+        }
+
         /// <summary>
         /// The ConfigureApplication_click.
         /// </summary>
@@ -135,7 +143,7 @@
         /// <param name="e">The e<see cref="EventArgs"/>.</param>
         private void Report_Click(object sender, EventArgs e)
         {
-            ABCAnnadhanamReports obj = new ABCAnnadhanamReports();
+            Reports obj = new Reports();
             obj.ShowDialog();
         }
 

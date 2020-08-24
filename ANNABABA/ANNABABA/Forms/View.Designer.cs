@@ -29,19 +29,29 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Microsoft.Reporting.WinForms.ReportDataSource reportDataSource1 = new Microsoft.Reporting.WinForms.ReportDataSource();
+            Microsoft.Reporting.WinForms.ReportDataSource reportDataSource2 = new Microsoft.Reporting.WinForms.ReportDataSource();
+            this.ReceiptTableBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.ABCReceiptDataset = new ANNABABA.ABCReceiptDataset();
             this.grbReceiptDetails = new System.Windows.Forms.GroupBox();
             this.btnGetDetails = new System.Windows.Forms.Button();
             this.lblDateValue = new System.Windows.Forms.Label();
             this.txtReceiptNumber = new System.Windows.Forms.TextBox();
             this.lblReceiptNumber = new System.Windows.Forms.Label();
             this.ReceiptReportViewer = new Microsoft.Reporting.WinForms.ReportViewer();
-            this.ABCReceiptDataset = new ANNABABA.ABCReceiptDataset();
-            this.ReceiptTableBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.grbReceiptDetails.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ABCReceiptDataset)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ReceiptTableBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ABCReceiptDataset)).BeginInit();
+            this.grbReceiptDetails.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // ReceiptTableBindingSource
+            // 
+            this.ReceiptTableBindingSource.DataMember = "ReceiptTable";
+            this.ReceiptTableBindingSource.DataSource = this.ABCReceiptDataset;
+            // 
+            // ABCReceiptDataset
+            // 
+            this.ABCReceiptDataset.DataSetName = "ABCReceiptDataset";
+            this.ABCReceiptDataset.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
             // grbReceiptDetails
             // 
@@ -98,24 +108,14 @@
             // 
             // ReceiptReportViewer
             // 
-            reportDataSource1.Name = "ABCReceiptDataset";
-            reportDataSource1.Value = this.ReceiptTableBindingSource;
-            this.ReceiptReportViewer.LocalReport.DataSources.Add(reportDataSource1);
+            reportDataSource2.Name = "ABCReceiptDataset";
+            reportDataSource2.Value = this.ReceiptTableBindingSource;
+            this.ReceiptReportViewer.LocalReport.DataSources.Add(reportDataSource2);
             this.ReceiptReportViewer.LocalReport.ReportEmbeddedResource = "ANNABABA.RDLC.ABCReceiptReport.rdlc";
             this.ReceiptReportViewer.Location = new System.Drawing.Point(9, 65);
             this.ReceiptReportViewer.Name = "ReceiptReportViewer";
             this.ReceiptReportViewer.Size = new System.Drawing.Size(697, 522);
             this.ReceiptReportViewer.TabIndex = 2;
-            // 
-            // ABCReceiptDataset
-            // 
-            this.ABCReceiptDataset.DataSetName = "ABCReceiptDataset";
-            this.ABCReceiptDataset.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
-            // ReceiptTableBindingSource
-            // 
-            this.ReceiptTableBindingSource.DataMember = "ReceiptTable";
-            this.ReceiptTableBindingSource.DataSource = this.ABCReceiptDataset;
             // 
             // View
             // 
@@ -128,13 +128,13 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "View";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Create - [ Receipt Input Form]";
+            this.Text = "Anadhanam - [ Re-Print Receipt Form]";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.PrintInputForm_FormClosing);
             this.Load += new System.EventHandler(this.PrintInputForm_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.ReceiptTableBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ABCReceiptDataset)).EndInit();
             this.grbReceiptDetails.ResumeLayout(false);
             this.grbReceiptDetails.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ABCReceiptDataset)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ReceiptTableBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }

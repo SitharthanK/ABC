@@ -69,7 +69,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Receipt";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Receipt";
+            this.Text = "Anadhanam-[Receipt Form]";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ReceiptReport_FormClosing);
             this.Load += new System.EventHandler(this.ReceiptReport_Load);
             ((System.ComponentModel.ISupportInitialize)(this.ReceiptTableBindingSource)).EndInit();

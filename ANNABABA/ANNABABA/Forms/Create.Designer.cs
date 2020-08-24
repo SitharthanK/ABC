@@ -482,7 +482,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Create";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Create - [Create Form]";
+            this.Text = "Anadhanam - [Create Form]";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AnnaBabaCharities_FormClosing);
             this.Load += new System.EventHandler(this.AnnaBabaCharities_Load);
             this.grbReceiptDetails.ResumeLayout(false);

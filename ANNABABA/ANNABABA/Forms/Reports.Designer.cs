@@ -1,6 +1,6 @@
 ﻿namespace ANNABABA
 {
-    partial class ABCAnnadhanamReports
+    partial class Reports
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Microsoft.Reporting.WinForms.ReportDataSource reportDataSource3 = new Microsoft.Reporting.WinForms.ReportDataSource();
+            Microsoft.Reporting.WinForms.ReportDataSource reportDataSource1 = new Microsoft.Reporting.WinForms.ReportDataSource();
             this.tblAnnadhanamDetailsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.ABCAnnadhanamReportsDataset = new ANNABABA.ABCAnnadhanamReportsDataset();
             this.grbParams = new System.Windows.Forms.GroupBox();
@@ -159,9 +159,9 @@
             // 
             // reportViewer1
             // 
-            reportDataSource3.Name = "ABCReportsDataset";
-            reportDataSource3.Value = this.tblAnnadhanamDetailsBindingSource;
-            this.reportViewer1.LocalReport.DataSources.Add(reportDataSource3);
+            reportDataSource1.Name = "ABCReportsDataset";
+            reportDataSource1.Value = this.tblAnnadhanamDetailsBindingSource;
+            this.reportViewer1.LocalReport.DataSources.Add(reportDataSource1);
             this.reportViewer1.LocalReport.ReportEmbeddedResource = "ANNABABA.RDLC.ABCReportData.rdlc";
             this.reportViewer1.Location = new System.Drawing.Point(6, 92);
             this.reportViewer1.Name = "reportViewer1";
@@ -172,7 +172,7 @@
             // 
             this.tblAnnadhanamDetailsTableAdapter.ClearBeforeFill = true;
             // 
-            // ABCAnnadhanamReports
+            // Reports
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -181,9 +181,9 @@
             this.Controls.Add(this.reportViewer1);
             this.Controls.Add(this.grbParams);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Name = "ABCAnnadhanamReports";
+            this.Name = "Reports";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Create - [Reports Form]";
+            this.Text = "Anadhanam - [Reports Form]";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ABCAnnadhanamReports_FormClosing);
             this.Load += new System.EventHandler(this.ABCAnnadhanamReorts_Load);
             ((System.ComponentModel.ISupportInitialize)(this.tblAnnadhanamDetailsBindingSource)).EndInit();

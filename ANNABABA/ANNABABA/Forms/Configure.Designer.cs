@@ -240,7 +240,7 @@
             this.MaximizeBox = false;
             this.Name = "Configure";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Configure";
+            this.Text = "Anadhanam - [Configure Form]";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nmcMonths)).EndInit();
